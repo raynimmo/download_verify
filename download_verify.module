@@ -1,0 +1,43 @@
+<?php
+/**
+ * @file
+ * creates a form for collecting user data before allowing a
+ * file download to continue.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function download_verify_help($path, $arg) {
+  if ($path == 'admin/help#download_verify') {
+    return t('Refer to the modules README.txt for further information regarding the use of the Download Verify module.');
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function download_verify_permission() {
+  return array(
+    'administer download verify' => array(
+      'title' => t('Administer Download Verify'),
+      'description' => t('Allows a user to configure Download Verify'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function download_verify_menu() {
+  $items['admin/config/download-verify'] = array(
+    'title' => 'Download Verify',
+    'description' => 'Configure module options',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('download_verify_configuration_form'),
+    'access arguments' => array('administer download verify'),
+    'file' => 'download_verify.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}

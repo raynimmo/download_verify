@@ -1,0 +1,23 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for Download Verify module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function download_verify_install() {
+  // Set any required variables.
+  variable_set('download_verify_email', 'yourname@example.com');
+  variable_set('download_verify_css_target', 'download-link-container');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function download_verify_uninstall() {
+  // Delete any database entries created.
+  variable_del('download_verify_email');
+  variable_del('download_verify_css_target');
+}
