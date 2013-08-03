@@ -1,1 +1,4 @@
 name = Download Verify
+description = Supplies a form for collecting user data before allowing a file download to continue.
+package = Marketing
+core = 7.x
