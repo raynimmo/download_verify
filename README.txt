@@ -10,8 +10,7 @@ Drupal: 7
 DEVELOPMENT SPONSOR:
 
 Module development has been sponsored by
-James Hargreaves (Plumbers Merchants) Ltd.
-http://www.jameshargreaves.com
+James Hargreaves Bathrooms
 http://www.jhbathrooms.com
 
 ********************************************************************

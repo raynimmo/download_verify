@@ -1,11 +1,15 @@
 <?php
 /**
  * @file
+ *
  * Generate configuration form and save settings.
  */
 
 /**
- * Configuration for module settings.
+ * Form Builder.
+ *
+ * @ingroup forms
+ * @see system_settings_form().
  */
 function download_verify_configuration_form($form, &$form_state) {
   // Get the path to the module.
@@ -51,6 +55,15 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 4,
     '#collapsible' => FALSE,
   );
+
+  //form element for setting intro text
+
+  //form element for setting footer text
+     // needs placeholder for link to privacy policy
+     // opt in to display link
+
+  // textarea element for setting the body of the email sent
+     // use placeholder tokens for details
 
   return system_settings_form($form);
 }

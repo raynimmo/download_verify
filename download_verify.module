@@ -41,3 +41,18 @@ function download_verify_menu() {
   );
   return $items;
 }
+
+define('DOWNLOAD_VERIFY_MAIL_TEXT',
+  'This is an automated email from [site:name],
+
+  Please add my name and email address to your site marketing list.
+  Full Name: [user:firstname] [user:surname]
+  Email: [user:email]
+  ');
+
+/**
+ * Implements hook_mail().
+ */
+function download_verify_mail($key, &$message, $params) {
+
+}
