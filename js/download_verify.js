@@ -15,16 +15,14 @@
         cancel button
   */
   // Intro section of text on slide-out panel.
-  // TODO : this needs set from the admin panel and pulled from database
-  Drupal.theme.prototype.download_verify_introtext = function() {
-    return '<p class="small">Please complete your details to continue the download.</p>';
+  Drupal.theme.prototype.download_verify_intro_text_wrapper = function(download_verify_intro_text) {
+    return '<p class="small">' + download_verify_intro_text + '</p>';
   }
 
   // Footer section of text on slide-out panel with optional link
-  // TODO : this needs set from the admin panel and pulled from database
   // TODO : use token replacement for {privacy-policy} link
-  Drupal.theme.prototype.download_verify_footertext = function() {
-    return '<p class="small">Emails are collected for marketing purposes in line with our <a href="#" title="">privacy policy</a>.</p>';
+  Drupal.theme.prototype.download_verify_footer_text_wrapper = function(download_verify_footer_text) {
+    return '<p class="small">' + download_verify_footer_text + '</p>';
   }
 
   // Main form content containing fields for firstname, secondname, email address and a submit button
@@ -33,33 +31,34 @@
       options: - construct the form using DOM methods
                - can Webform help?
   */
-  Drupal.theme.prototype.download_verify_form = function() {
+  Drupal.theme.prototype.download_verify_form_wrapper = function() {
     return '<div><div class="form-item form-type-textfield form-item-fname"><label for="edit-fname">Firstname <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname"></div><div class="form-item form-type-textfield form-item-name"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname"></div><div class="form-item form-type-textfield form-item-name"><label for="edit-email">Email <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email"></div><div id="edit-actions" class="form-actions form-wrapper"><a class="button form-submit" id="edit-submit" onclick="validateForm();">Download</a><a class="button form-cancel" id="edit-cancel"  onclick="verifyClose();">Cancel</a></div></div><p class="msgbox"><b>Selected Download:</b><br /><span class="filename-display"></span><span class="filepath-display"></span></p>';
+
   }
 
   // onload, do this.
-  Drupal.behaviors.downloadverify = {
+  Drupal.behaviors.download_verify = {
 
     attach: function (context, settings) {
       //console.log("download_verify js loaded");
       //get settings
-      // TODO: get CSS class name to target for the form injection.
-
-      // TODO: get Email address to forward collected data.
+      var download_verify_css_target = Drupal.settings.download_verify.download_verify_css_target;
+      var download_verify_email = Drupal.settings.download_verify.download_verify_email;
+      var download_verify_intro_text = Drupal.settings.download_verify.download_verify_intro_text;
+      var download_verify_footer_text = Drupal.settings.download_verify.download_verify_footer_text;
 
       // set up the form
+      var introtext = Drupal.theme('download_verify_intro_text_wrapper', download_verify_intro_text);
+      var footertext = Drupal.theme('download_verify_footer_text_wrapper', download_verify_footer_text);
+      var theform = Drupal.theme('download_verify_form_wrapper');
 
-      var introtext = Drupal.theme('download_verify_introtext');
-      var footertext = Drupal.theme('download_verify_footertext');
-      var theform = Drupal.theme('download_verify_form');
-
-      var verifyForm = '<div id="verify-form">'+introtext+theform+footertext+"</div>";
+      //var verifyForm = '<div id="verify-form">target:' + download_verify_css_target + "<br />" + introtext + theform + footertext + "</div>";
+      var verifyForm = '<div id="verify-form">' + introtext + theform + footertext + "</div>";
       var isOpen;
       var filepath;
 
       //hijack the pdf clicks
-      // TODO : replace classname with value from database
-      $('.download-link-container a').click(function(event){
+      $('.' + download_verify_css_target +' a').click(function(event){
 
         //TODO: check for cookie on users machine
 
@@ -85,21 +84,20 @@
           filepath = $(this).attr('href');
           filename = $(this).html();
 
-          console.log('pdf HREF:'+filepath);
-          console.log('pdf filename:'+filename);
+          //console.log('pdf HREF:'+filepath);
+          //console.log('pdf filename:'+filename);
 
           //attach form content to link container element
-          // TODO : replace classname with value from database
-          $('.download-link-container').append(verifyForm);
+          $('.' + download_verify_css_target).append(verifyForm);
 
           //display selected
           $('span.filename-display').append(filename);
+          // Hidden file path used to pass variable to function : not ideal - refactor
           $('span.filepath-display').append(filepath);
           //slide it out
           $('#verify-form').slideDown(600, function(){
             isOpen = true;
           });
-
 
         }else if(isOpen) {
           //clear the target file
@@ -114,18 +112,28 @@
           $('span.filename-display').append(filename);
           $('span.filepath-display').append(filepath);
 
-          console.log('pdf HREF:'+filepath);
-          console.log('pdf filename:'+filename);
+          //console.log('pdf HREF:'+filepath);
+          //console.log('pdf filename:'+filename);
         }
-
-
 
       }); // end pdf click hijack
     } // end function:attach
-  } // end Drupal.behaviours.downloadverify
 
+    /*
+    verifyClose: function verifyClose() {
+      var isOpen=true;
+      console.log('close the form');
+      //slide it back up
+      jQuery('#verify-form').slideUp(600,function(){
+        //ditch the form
+        jQuery('#verify-form').remove();
+        isOpen = false;
+      });
+      return isOpen; //is this required?
+    }
+    */
 
-
+  } // end Drupal.behaviours.download_verify
 
 }(jQuery)); // end onload
 
@@ -142,6 +150,7 @@
     });
     return isOpen; //is this required?
   }
+
 
 
 

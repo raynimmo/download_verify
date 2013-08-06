@@ -1,7 +1,6 @@
 <?php
 /**
  * @file
- *
  * Generate configuration form and save settings.
  */
 
@@ -9,7 +8,7 @@
  * Form Builder.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function download_verify_configuration_form($form, &$form_state) {
   // Get the path to the module.
@@ -31,9 +30,9 @@ function download_verify_configuration_form($form, &$form_state) {
     '#collapsible' => FALSE,
   );
   // Single text field for email address entry.
-  $form['download_verify_mail_settings']['send_to_address'] = array(
+  $form['download_verify_mail_settings']['download_verify_email'] = array(
     '#type' => 'textfield',
-    '#default_value' => variable_get('send_to_address', 'yourname@example.com'),
+    '#default_value' => variable_get('download_verify_email', 'yourname@example.com'),
     '#title' => t('Address to receive form mail.'),
     '#weight' => 2,
     '#collapsible' => FALSE,
@@ -48,22 +47,53 @@ function download_verify_configuration_form($form, &$form_state) {
     '#collapsible' => FALSE,
   );
   // Single text field for CSS target reference entry.
-  $form['download_verify_css_target_settings']['attach_to_css'] = array(
+  $form['download_verify_css_target_settings']['download_verify_css_target'] = array(
     '#type' => 'textfield',
-    '#default_value' => variable_get('attach_to_css', 'yourname@example.com'),
+    '#default_value' => variable_get('download_verify_css_target', 'download-link-container'),
     '#title' => t('CSS class name.'),
     '#weight' => 4,
     '#collapsible' => FALSE,
   );
 
-  //form element for setting intro text
+  // Form element for setting intro text.
+  // Set up the intro text container.
+  $form['download_verify_intro_text_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Intro text content'),
+    '#description' => t('Enter the text you wish to be shown at the top of the form'),
+    '#weight' => 5,
+    '#collapsible' => FALSE,
+  );
+  // Single text field for intro text entry.
+  $form['download_verify_intro_text_settings']['download_verify_intro_text'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('download_verify_intro_text', 'Please complete your details to continue the download.'),
+    '#title' => t('The text to display'),
+    '#weight' => 6,
+    '#collapsible' => FALSE,
+  );
 
-  //form element for setting footer text
-     // needs placeholder for link to privacy policy
-     // opt in to display link
+  // Form element for setting footer text.
+  // needs placeholder for link to privacy policy.
+  // opt in to display link
+  $form['download_verify_footer_text_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Footer text content'),
+    '#description' => t('Enter the text you wish to be shown at the bottom of the form'),
+    '#weight' => 7,
+    '#collapsible' => FALSE,
+  );
+  // Single text field for footer text entry.
+  $form['download_verify_footer_text_settings']['download_verify_footer_text'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('download_verify_footer_text', 'Emails are collected for marketing purposes in line with our <a href="#" title="">privacy policy</a>.'),
+    '#title' => t('The text to display'),
+    '#weight' => 8,
+    '#collapsible' => FALSE,
+  );
 
-  // textarea element for setting the body of the email sent
-     // use placeholder tokens for details
+  // Textarea element for setting the body of the email sent.
+     //TODO: Use placeholder tokens for details.
 
   return system_settings_form($form);
 }

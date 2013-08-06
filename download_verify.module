@@ -6,6 +6,25 @@
  */
 
 /**
+ * Implements hook_init().
+ */
+function download_verify_init() {
+  // Since this file should only be loaded on the front page, it cannot be
+  // declared in the info file.
+  //if (drupal_is_front_page()) {
+  //  drupal_add_css(drupal_get_path('module', 'foo') . '/foo.css');
+  //}
+  //get all the required variables.
+  $download_verify_settings = array(
+    'download_verify_email' => variable_get('download_verify_email'),
+    'download_verify_css_target' => variable_get('download_verify_css_target'),
+    'download_verify_intro_text' => variable_get('download_verify_intro_text'),
+    'download_verify_footer_text' => variable_get('download_verify_footer_text'),
+    );
+    drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
+}
+
+/**
  * Implements hook_help().
  */
 function download_verify_help($path, $arg) {
@@ -55,4 +74,12 @@ define('DOWNLOAD_VERIFY_MAIL_TEXT',
  */
 function download_verify_mail($key, &$message, $params) {
 
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function download_verify_form_alter(&$form, &$form_state, $form_id) {
+  //dsm($form_id);  // print form ID to messages
+  //dsm($form);  // pretty print array using Krumo to messages
 }

@@ -5,8 +5,8 @@ core = 7.x
 scripts[] = js/download_verify.js
 stylesheets[all][] = css/download_verify.css
 
-files[] = download_verify.module
-files[] = download_verify.admin.inc
+;files[] = download_verify.module
+;files[] = download_verify.admin.inc
 
 ;dependencies[] = block
 
