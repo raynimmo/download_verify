@@ -27,6 +27,17 @@ span.form-required {
 span.filepath-display {
   display:none;
 }
+code{
+  display:block;
+  border:1px solid #787878!important;
+  background: #ededed;
+  color: #313131;
+  padding:5px 10px!important;
+  /*
+  font-family: System, Arial, Helvetica, sans-serif;
+  font-size: 0.8em!important;
+  */
+}
 
 /* TODO: change trigger to default error style in existing stylesheet*/
 input.in-error {

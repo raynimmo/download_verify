@@ -25,7 +25,7 @@ function download_verify_configuration_form($form, &$form_state) {
   $form['download_verify_mail_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Mail configuration'),
-    '#description' => t('Enter the e-mail address to be used for form submission configuration.'),
+    '#description' => t('Enter the e-mail address to be used for form submission configuration. This email address will not be exposed to the site visitor.'),
     '#weight' => 1,
     '#collapsible' => FALSE,
   );
@@ -42,7 +42,10 @@ function download_verify_configuration_form($form, &$form_state) {
   $form['download_verify_css_target_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('CSS target configuration'),
-    '#description' => t('Enter the CSS class name to be used for attaching the form to.'),
+    '#description' => t('<p>Enter the CSS class name to be used for attaching the form to.<p><p>This can be any <em>wrapper</em> element that contains any number of HTML achor tags.</p>Suggested formats could be: <code>
+      &lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;a link&lt;/a&gt;<br />&nbsp;&nbsp;&lt;a&gt;another link&lt;/a&gt;<br />&lt;/div&gt;</code>
+      <code>&lt;ul class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;a link&lt;/a&gt;&lt;/li&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;another link&lt;/a&gt;&lt;/li&gt;<br />&lt;/ul&gt;</code>
+      <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;&lt;img /&gt;&lt;/a&gt;<br />&lt;/div&gt;</code>'),
     '#weight' => 3,
     '#collapsible' => FALSE,
   );
