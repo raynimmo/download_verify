@@ -140,7 +140,16 @@
 
         // if [user-has-filled-form-before]
 
-          // =>continue the download
+        var existing_cookie = jQuery.cookie("downloadverifyform");
+
+        if(existing_cookie){
+          console.log("cookie:"+existing_cookie);
+          console.log("download start");
+          begin_download($(this).attr('href'));
+        }else{
+
+
+
 
         // else if [user-has-not-filled-form-before]
 
@@ -191,7 +200,7 @@
           //console.log('pdf HREF:'+filepath);
           //console.log('pdf filename:'+filename);
         }
-
+        } // end cookie if/else
       }); // end pdf click hijack
     } // end function:attach
 
@@ -279,7 +288,8 @@
         console.log('filepath:'+filepath);
 
         //set the cookie
-
+        //user_cookie_save(array('downloadverifyform' => '1'));
+        jQuery.cookie("downloadverifyform", "1", { expires: 365 });
         //email details
 
         //start the file download
@@ -342,5 +352,32 @@
       return true;
 
     }
-
   }
+
+    //called when user already has cookie set, direct download
+  function begin_download(filepath){
+    //event.preventDefault();
+
+        //set a new cookie
+        jQuery.cookie("downloadverifyform", "1", { expires: 365 });
+
+        //start the file download
+        var downloadURL = function downloadURL(filepath) {
+          var hiddenIFrameID = 'hiddenDownloader';
+          iframe = document.getElementById(hiddenIFrameID);
+          if (iframe === null) {
+            iframe = document.createElement('iframe');
+              iframe.id = hiddenIFrameID;
+              iframe.style.display = 'none';
+              document.body.appendChild(iframe);
+          }
+          iframe.src = filepath;
+        };
+        downloadURL(filepath);
+
+        return true;
+
+
+      }
+
+

@@ -11,11 +11,6 @@
  //is it better to use 'function download_verify_preprocess_html(&$vars)' ??
 
 function download_verify_init() {
-  // Since this file should only be loaded on the front page, it cannot be
-  // declared in the info file.
-  //if (drupal_is_front_page()) {
-  //  drupal_add_css(drupal_get_path('module', 'foo') . '/foo.css');
-  //}
   //get all the required variables.
   $download_verify_settings = array(
     'download_verify_email' => variable_get('download_verify_email'),
@@ -25,6 +20,8 @@ function download_verify_init() {
     //'download_verify_ui_form' => download_verify_ui_form($form, &$form_state),
     );
     drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
+    global $base_path;
+    drupal_add_js($base_path . 'misc/jquery.cookie.js');
 }
 
 /**
@@ -86,6 +83,10 @@ function download_verify_form_submit($form, &$form_state) {
 
 /**
  * Form Builder.
+ *
+ * Create the slideout form using the Form API
+ * --problematic injecting form into variable
+ * --and passed to javascript
  */
  /*
 function download_verify_ui_form($form, &$form_state) {
