@@ -1,6 +1,6 @@
 <div>
   <div class="form-item form-type-textfield form-item-fname">
-    <label for="edit-fname">Firstname <span title="This field is required." class="form-required">*</span></label>
+    <label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label>
     <input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname">
   </div>
 

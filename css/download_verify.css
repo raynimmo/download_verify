@@ -47,6 +47,10 @@ input.in-error {
 
 /* TODO: need to hook into site default styles better*/
 .button {
+  word-wrap: normal;
+}
+/*
+.button {
   background-attachment: scroll;
   background-clip: border-box;
   background-image: none;
@@ -63,6 +67,7 @@ input.in-error {
   padding-top: 0.32em;
   text-align: center;
 }
+
 .button:hover {
   opacity:0.8;
   cursor:pointer;
@@ -76,3 +81,4 @@ input.in-error {
   color:#000000;
   margin-left:8px;
 }
+*/

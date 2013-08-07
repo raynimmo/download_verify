@@ -1,6 +1,8 @@
 /**
  * @file
  * Javascript functions for Download Verify module.
+ *
+ * Still a lot of thinking going on here!
  */
 
 (function ($) {
@@ -25,6 +27,75 @@
     return '<p class="small">' + download_verify_footer_text + '</p>';
   }
 
+  // Form textfield for first name
+  /*
+  <div class="form-item form-type-textfield form-item-fname">
+  <label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label>
+  <input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname"></div>
+  */
+  Drupal.theme.prototype.download_verify_form_fname = function() {
+    return '<div class="form-item form-type-textfield form-item-fname"><label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname" onkeypress="return download_verify_letters_only(event);" /></div>';
+  }
+
+  // Form textfield for surname
+  /*
+  <div class="form-item form-type-textfield form-item-sname"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label>
+  <input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname"></div>
+  */
+  Drupal.theme.prototype.download_verify_form_sname = function() {
+    return '<div class="form-item form-type-textfield form-item-sname"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname" onkeypress="return download_verify_letters_only(event);" /></div>';
+  }
+
+  // Form textfield for email address
+  /*
+  <div class="form-item form-type-textfield form-item-name"><label for="edit-email">Email <span title="This field is required." class="form-required">*</span></label>
+  <input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email"></div>
+  */
+  Drupal.theme.prototype.download_verify_form_email = function() {
+    return '<div class="form-item form-type-textfield form-item-email"><label for="edit-email">Email <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email" /></div>';
+  }
+
+  // Form action buttons
+  /*
+  <div id="edit-actions" class="form-actions form-wrapper">
+  <a class="button form-submit" id="edit-submit" onclick="validateForm();">Download</a>
+  <a class="button form-cancel" id="edit-cancel"  onclick="verifyClose();">Cancel</a>
+  </div>
+  */
+
+  Drupal.theme.prototype.download_verify_form_actions = function() {
+    return '<div id="edit-actions" class="form-actions form-wrapper"><a class="button form-submit" id="edit-submit" onclick="validateForm();">Download</a><a class="button form-cancel" id="edit-cancel"  onclick="verifyClose();">Cancel</a></div>';
+  }
+  /*
+  Drupal.theme.prototype.download_verify_form_actions = function() {
+    return '<div id="edit-actions" class="form-actions form-wrapper"><input type="submit" value="Download" id="download-verify-submit" class="button form-submit" /><input type="reset" value="Cancel" id="download-verify-cancel" class="button form-submit" /></div>';
+  }
+  */
+  // Form UI feedback
+  /*
+  <p class="msgbox"><b>Selected Download:</b><br /><span class="filename-display"></span><span class="filepath-display"></span></p>';
+  */
+  Drupal.theme.prototype.download_verify_form_feedback = function() {
+    return '<p class="msgbox"><b>Selected Download:</b><br /><span class="filename-display"></span><span class="filepath-display"></span></p>';
+  }
+
+  Drupal.theme.prototype.download_verify_ui_form = function() {
+    var the_form;
+    //the_form = '<form accept-charset="UTF-8" id="download-verify-ui-form" method="POST" action="download_verify_standalone_mail_form_function.php" onsubmit="return validateForm();" onreset="return verifyClose();"><div>'
+    //the_form = '<form accept-charset="UTF-8" id="download-verify-ui-form" method="" action=""><div>'
+    //the_form = '<form accept-charset="UTF-8" id="download-verify-ui-form" method="POST" action="#" onsubmit="return validateForm();" onreset="return verifyClose();"><div>'
+    the_form = '<div>'
+             + Drupal.theme('download_verify_form_fname')
+             + Drupal.theme('download_verify_form_sname')
+             + Drupal.theme('download_verify_form_email')
+             + Drupal.theme('download_verify_form_actions')
+             + Drupal.theme('download_verify_form_feedback')
+             + '</div>';
+    //         + '</div></form>';
+    return the_form;
+  }
+
+
   // Main form content containing fields for firstname, secondname, email address and a submit button
   // Form contains development element span.filepath-display - remove from production
   /* TODO : clean this up!
@@ -32,10 +103,11 @@
                - can Webform help?
                - prototype elements?
   */
-  Drupal.theme.prototype.download_verify_form_wrapper = function() {
+  /*Drupal.theme.prototype.download_verify_form_wrapper = function() {
     return '<div><div class="form-item form-type-textfield form-item-fname"><label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname"></div><div class="form-item form-type-textfield form-item-name"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname"></div><div class="form-item form-type-textfield form-item-name"><label for="edit-email">Email <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email"></div><div id="edit-actions" class="form-actions form-wrapper"><a class="button form-submit" id="edit-submit" onclick="validateForm();">Download</a><a class="button form-cancel" id="edit-cancel"  onclick="verifyClose();">Cancel</a></div></div><p class="msgbox"><b>Selected Download:</b><br /><span class="filename-display"></span><span class="filepath-display"></span></p>';
 
   }
+  */
 
   // onload, do this.
   Drupal.behaviors.download_verify = {
@@ -48,10 +120,13 @@
       var download_verify_intro_text = Drupal.settings.download_verify.download_verify_intro_text;
       var download_verify_footer_text = Drupal.settings.download_verify.download_verify_footer_text;
 
+      //var download_verify_ui_form = Drupal.settings.download_verify.download_verify_ui_form;
+
       // set up the form
       var introtext = Drupal.theme('download_verify_intro_text_wrapper', download_verify_intro_text);
       var footertext = Drupal.theme('download_verify_footer_text_wrapper', download_verify_footer_text);
-      var theform = Drupal.theme('download_verify_form_wrapper');
+      var theform = Drupal.theme('download_verify_ui_form');
+      //var theform = download_verify_ui_form();
 
       //var verifyForm = '<div id="verify-form">target:' + download_verify_css_target + "<br />" + introtext + theform + footertext + "</div>";
       var verifyForm = '<div id="verify-form">' + introtext + theform + footertext + "</div>";
@@ -139,6 +214,9 @@
 }(jQuery)); // end onload
 
 
+
+
+
   //called by 'cancel' btn
   function verifyClose(){
     var isOpen=true;
@@ -173,29 +251,96 @@
       return false;
     }else{
       console.log('all fields have a value');
+
+      //check for previous email format error
+      var email_error_shown = jQuery('#verify-form input#edit-email.error.email-format');
+      if(email_error_shown) {
+        console.log("email error displayed");
+        jQuery('#verify-form input#edit-email').removeClass('error email-format');
+        jQuery('.form-item-email .form-required').html('*');
+        console.log("email error removed");
+      }else{
+        console.log("no email error");
+      }
+
+
+
       //TODO: check for characters not numbers in fname, sname
+      //   - set on keypress attrib of textfield
+
       //TODO: check string length, set minimum
+
       //TODO: regex to check email follows correct format
+      var valid_email = download_verify_check_email_format(email);
 
-      //get the file path
-      filepath = jQuery('span.filepath-display').html();
-      console.log('filepath:'+filepath);
+      if(valid_email) { // if the email is valid
+        //get the file path
+        filepath = jQuery('span.filepath-display').html();
+        console.log('filepath:'+filepath);
 
-      //start the file download
-      var downloadURL = function downloadURL(filepath) {
-        var hiddenIFrameID = 'hiddenDownloader';
-        iframe = document.getElementById(hiddenIFrameID);
-        if (iframe === null) {
-          iframe = document.createElement('iframe');
-            iframe.id = hiddenIFrameID;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-        }
-        iframe.src = filepath;
-      };
-      downloadURL(filepath);
+        //set the cookie
 
+        //email details
+
+        //start the file download
+        var downloadURL = function downloadURL(filepath) {
+          var hiddenIFrameID = 'hiddenDownloader';
+          iframe = document.getElementById(hiddenIFrameID);
+          if (iframe === null) {
+            iframe = document.createElement('iframe');
+              iframe.id = hiddenIFrameID;
+              iframe.style.display = 'none';
+              document.body.appendChild(iframe);
+          }
+          iframe.src = filepath;
+        };
+        downloadURL(filepath);
+
+        return true;
+
+      } else {
+        //email format fail
+        jQuery('#verify-form input#edit-email').addClass('error email-format');
+        jQuery('.form-item-email .form-required').html('*');
+        jQuery('.form-item-email .form-required').append('Incorrect Format');
+
+        return false;
+
+      }
+
+
+
+    }
+  }
+
+  // Called on textfield keypress to enfore characters only, no numbers
+  function download_verify_letters_only(evt) {
+       evt = (evt) ? evt : event;
+       var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
+          ((evt.which) ? evt.which : 0));
+       if (charCode > 31 && (charCode < 65 || charCode > 90) &&
+          (charCode < 97 || charCode > 122)) {
+          alert("Enter letters only.");
+          return false;
+       }
+       return true;
+     }
+
+  // Check email format is valid
+  function download_verify_check_email_format(email_address) {
+    console.log("testing email");
+    console.log("email: "+email_address);
+    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    //var filter = /\S+@\S+\.\S+/;
+
+    if (!filter.test(email_address)) {
+      console.log("email fail");
+      return false;
+
+    }else{
+      console.log("email pass");
       return true;
+
     }
 
   }
