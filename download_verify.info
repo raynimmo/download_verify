@@ -10,4 +10,4 @@ stylesheets[all][] = css/download_verify.css
 
 ;dependencies[] = block
 
-configure = admin/config/download_verify
+configure = admin/config/download-verify

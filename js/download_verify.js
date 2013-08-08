@@ -146,9 +146,10 @@
 
         // User already has cookie set indicating previous form completion
         if(existing_cookie && download_verify_cookie_display!=0){
-          console.log("cookie:"+existing_cookie);
+          console.log("downloadverify cookie already exists");
+          console.log("current cookie settings:" + existing_cookie + " - " + download_verify_cookie_expiry);
           console.log("download start - bypass form");
-          begin_download($(this).attr('href'));
+          download_verify_begin_download($(this).attr('href'));
 
         }else{
           // No cookie found on the users system
@@ -255,7 +256,7 @@ function validateForm(){
 
     //TODO: check string length, set minimum
 
-    //TODO: regex to check email follows correct format
+    // Check email follows a conventional format
     var valid_email = download_verify_check_email_format(email);
     if(valid_email) { // if the email is valid
       //get the file path
@@ -263,8 +264,12 @@ function validateForm(){
       console.log('filepath:'+filepath);
 
       var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;
-      var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
-      console.log("cookie check at save: " + download_verify_cookie_display + " - " + download_verify_cookie_expiry);
+      //var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
+
+      //var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
+      //console.log("mailscript path:" + download_verify_mail_script_path);
+
+      //console.log("cookie check at save: " + download_verify_cookie_display + " - " + download_verify_cookie_expiry);
 
       //set the cookie
       //user_cookie_save(array('downloadverifyform' => '1'));
@@ -272,9 +277,11 @@ function validateForm(){
         jQuery.cookie("downloadverifyform", "1", { expires: download_verify_cookie_expiry });
       }
       //email details
+      //get the send-to address
+      //var download_verify_email = Drupal.settings.download_verify.download_verify_email;
+      //console.log("email send to:" + download_verify_email);
 
-      //close the form
-      return verifyClose();
+      download_verify_send_mail(fname, sname, email);
 
       //start the file download
       var downloadURL = function downloadURL(filepath) {
@@ -286,11 +293,15 @@ function validateForm(){
           iframe.style.display = 'none';
           document.body.appendChild(iframe);
         }
+        console.log("begin download");
         iframe.src = filepath;
       };
       downloadURL(filepath);      
 
-      return true;
+      //return true;
+      //close the form
+      return verifyClose();
+
     } else {
       //email format fail
       jQuery('#verify-form input#edit-email').addClass('error email-format');
@@ -301,7 +312,58 @@ function validateForm(){
   }
 }
 
+// Custom function for sending the email
+/*
+function download_verify_send_mail(download_verify_email) {
+
+  return true;
+}
+*/
+function download_verify_send_mail(fname, sname, email){
+  
+  /*
+  var guestname=$('#guestname').val();
+  var guestemail=$('#guestemail').val();
+  var agency=$('#agency').val();
+  */
+  console.log("mail data: " + fname + " " + sname + ", " + email);
+
+  var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
+  console.log("mailscript path:" + download_verify_mail_script_path);
+
+  var download_verify_email = Drupal.settings.download_verify.download_verify_email;
+  console.log("email send to:" + download_verify_email);
+
+  var post_string="?address="+download_verify_email+"&fname="+fname+"&sname="+sname+"&email="+email;
+
+  var xhr;
+  if (window.XMLHttpRequest) {
+    xhr = new XMLHttpRequest();
+  }else if (window.ActiveXObject) {
+    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+  }else{
+    throw new Error("Ajax is not supported by this browser");
+    console.log("Ajax not supported");
+
+  }
+  xhr.open('GET', download_verify_mail_script_path + post_string);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        //alert("email sent")
+        console.log("email sent: 354");
+      }
+    }else{
+      console.log("email not sent: 357");
+    }
+  }
+  xhr.send(null);
+}
+
+
+
 // Called on textfield keypress to enfore characters only, no numbers
+// * Unused, need to be able to add hyphenation
 function download_verify_letters_only(evt) {
   evt = (evt) ? evt : event;
   var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
@@ -313,7 +375,7 @@ function download_verify_letters_only(evt) {
   return true;
 }
 
-// Check email format is valid
+// Check email format conforms to xxx@xxx.xxx format
 function download_verify_check_email_format(email_address) {
   console.log("testing email");
   console.log("email: "+email_address);
@@ -328,8 +390,8 @@ function download_verify_check_email_format(email_address) {
   }
 }
 
-// Called when user already has cookie set, direct download
-function begin_download(filepath){
+// Called when user already has cookie set, direct download.
+function download_verify_begin_download(filepath){
   //event.preventDefault();
   //set a new cookie
   jQuery.cookie("downloadverifyform", "1", { expires: 365 });

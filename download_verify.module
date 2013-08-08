@@ -20,6 +20,7 @@ function download_verify_init() {
     //'download_verify_ui_form' => download_verify_ui_form($form, &$form_state),
     'download_verify_cookie_display' => variable_get('download_verify_cookie_display'),
     'download_verify_cookie_expiry' => variable_get('download_verify_cookie_expiry'),
+    'download_verify_mail_script_path' => drupal_get_path('module', 'download_verify') . "/download_verify_mail_send.php",
     );
     drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
     global $base_path;
@@ -77,7 +78,7 @@ define('DOWNLOAD_VERIFY_MAIL_TEXT',
 function download_verify_form_submit($form, &$form_state) {
   drupal_set_message(t('<p>form submit</p>'));
 
-  return true;
+  return TRUE;
 }
 
 
@@ -158,6 +159,7 @@ function download_verify_ui_form($form, &$form_state) {
 
  // usage:
  // drupal_mail($module, $key, $to, $language, $params = array('username' => 'John Potato'), $from = NULL, $send = TRUE)
+/*
 function download_verify_mail ($key, &$message, $params) {
   switch ($key) {
     case 'mymail':
@@ -169,6 +171,7 @@ function download_verify_mail ($key, &$message, $params) {
       break;
   }
 }
+*/
 
 /**
  * Implements hook_form_alter().
