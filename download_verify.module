@@ -18,6 +18,8 @@ function download_verify_init() {
     'download_verify_intro_text' => variable_get('download_verify_intro_text'),
     'download_verify_footer_text' => variable_get('download_verify_footer_text'),
     //'download_verify_ui_form' => download_verify_ui_form($form, &$form_state),
+    'download_verify_cookie_display' => variable_get('download_verify_cookie_display'),
+    'download_verify_cookie_expiry' => variable_get('download_verify_cookie_expiry'),
     );
     drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
     global $base_path;

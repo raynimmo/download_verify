@@ -75,7 +75,7 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 6,
     '#collapsible' => FALSE,
   );
-
+  
   // Form element for setting footer text.
   // needs placeholder for link to privacy policy.
   // opt in to display link
@@ -94,6 +94,51 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 8,
     '#collapsible' => FALSE,
   );
+
+  // Set up fieldset for cookie options
+  $form['download_verify_cookie_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Cookie options'),
+    '#description' => t('Configurations to allow the setting of the cookie and its expiry time.'),
+    '#weight' => 9,
+    '#collapsible' => FALSE,
+  );
+  // Set up radio buttons for optional cookie setting
+  $form['download_verify_cookie_settings']['download_verify_cookie_display'] = array(
+    '#type' => 'radios',
+    '#title' => t('Set cookie on form submission.'),
+    '#default_value' => variable_get('download_verify_cookie_display', 0),
+    '#options' => array(
+        0 => t('Off'),
+        1 => t('On'),
+      ),
+    '#description' => t('Optional setting of the cookie on the users system. When this is set to <em>Off</em> then the module will not check for the presence of previous cookies either.'),
+  );
+  // Declare the cookie expiry options
+  /*
+  $form['download_verify_cookie_settings']['download_verify_cookie_expiry_values'] = array(
+      '#type' => 'value',
+      '#value' => array(
+        t('1 day'),
+        t('1 week'),
+        t('1 month'),
+        t('3 months'),
+        t('6 months'),
+        t('1 year')
+      )
+    );
+  */
+  $download_verify_cookie_expiry_values = drupal_map_assoc(array(86400, 604800, 2419200, 7776000, 15552000, 31104000), 'format_interval');
+  // Set up the select element for the cookie expiry time
+  $form['download_verify_cookie_settings']['download_verify_cookie_expiry'] = array(
+      '#type' => 'select',
+      '#title' => 'Cookie expiry time.',
+      '#default_value' => variable_get('download_verify_cookie_expiry', 0),
+      '#options' => $download_verify_cookie_expiry_values,
+      '#description' => t('Set the expiry period for the cookie that is set on the users system.'),
+          
+        
+    );
 
   // Textarea element for setting the body of the email sent.
      //TODO: Use placeholder tokens for details.

@@ -33,8 +33,9 @@
   <label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label>
   <input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname"></div>
   */
+  //onkeypress="return download_verify_letters_only(event);"
   Drupal.theme.prototype.download_verify_form_fname = function() {
-    return '<div class="form-item form-type-textfield form-item-fname"><label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname" onkeypress="return download_verify_letters_only(event);" /></div>';
+    return '<div class="form-item form-type-textfield form-item-fname"><label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname" /></div>';
   }
 
   // Form textfield for surname
@@ -42,8 +43,9 @@
   <div class="form-item form-type-textfield form-item-sname"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label>
   <input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname"></div>
   */
+  //onkeypress="return download_verify_letters_only(event);"
   Drupal.theme.prototype.download_verify_form_sname = function() {
-    return '<div class="form-item form-type-textfield form-item-sname"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname" onkeypress="return download_verify_letters_only(event);" /></div>';
+    return '<div class="form-item form-type-textfield form-item-sname"><label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label><input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname" /></div>';
   }
 
   // Form textfield for email address
@@ -119,8 +121,9 @@
       var download_verify_email = Drupal.settings.download_verify.download_verify_email;
       var download_verify_intro_text = Drupal.settings.download_verify.download_verify_intro_text;
       var download_verify_footer_text = Drupal.settings.download_verify.download_verify_footer_text;
-
       //var download_verify_ui_form = Drupal.settings.download_verify.download_verify_ui_form;
+      var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;
+      var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
 
       // set up the form
       var introtext = Drupal.theme('download_verify_intro_text_wrapper', download_verify_intro_text);
@@ -136,248 +139,213 @@
       //hijack the pdf clicks
       $('.' + download_verify_css_target +' a', context).click(function(event){
 
-        //TODO: check for cookie on users machine
+        // Check for cookie on users machine
+        if(download_verify_cookie_display ==1) {
+          var existing_cookie = jQuery.cookie("downloadverifyform");
+        }
 
-        // if [user-has-filled-form-before]
-
-        var existing_cookie = jQuery.cookie("downloadverifyform");
-
-        if(existing_cookie){
+        // User already has cookie set indicating previous form completion
+        if(existing_cookie && download_verify_cookie_display!=0){
           console.log("cookie:"+existing_cookie);
-          console.log("download start");
+          console.log("download start - bypass form");
           begin_download($(this).attr('href'));
+
         }else{
+          // No cookie found on the users system
+          event.preventDefault();
 
-
-
-
-        // else if [user-has-not-filled-form-before]
-
-        event.preventDefault();
-
-        //check if the form is open
-        if($('#verify-form').length > 0){
-          isOpen = true;
-          //console.log("isOpen");
-        }else{
-          isOpen = false;
-          //console.log("isNotOpen");
-        }
-
-        if(!isOpen) {
-          //get the target file
-          filepath = $(this).attr('href');
-          filename = $(this).html();
-
-          //console.log('pdf HREF:'+filepath);
-          //console.log('pdf filename:'+filename);
-
-          //attach form content to link container element
-          $('.' + download_verify_css_target).append(verifyForm);
-
-          //display selected
-          $('span.filename-display').append(filename);
-          // Hidden file path used to pass variable to function : not ideal - refactor
-          $('span.filepath-display').append(filepath);
-          //slide it out
-          $('#verify-form').slideDown(600, function(){
+          //check if the form is open
+          if($('#verify-form').length > 0){
             isOpen = true;
-          });
+            //console.log("isOpen");
+          }else{
+            isOpen = false;
+            //console.log("isNotOpen");
+          }
 
-        }else if(isOpen) {
-          //clear the target file
-          $('span.filename-display').empty();
-          $('span.filepath-display').empty();
+          if(!isOpen) {
+            //get the target file
+            filepath = $(this).attr('href');
+            filename = $(this).html();
 
-          //change the PDF target filepath
-          filepath = $(this).attr('href');
-          filename = $(this).html();
+            //console.log('pdf HREF:'+filepath);
+            //console.log('pdf filename:'+filename);
 
-          //display selected
-          $('span.filename-display').append(filename);
-          $('span.filepath-display').append(filepath);
+            //attach form content to link container element
+            $('.' + download_verify_css_target).append(verifyForm);
 
-          //console.log('pdf HREF:'+filepath);
-          //console.log('pdf filename:'+filename);
-        }
+            //display selected
+            $('span.filename-display').append(filename);
+            // Hidden file path used to pass variable to function : not ideal - refactor
+            $('span.filepath-display').append(filepath);
+            //slide it out
+            $('#verify-form').slideDown(600, function(){
+              isOpen = true;
+            });
+
+          }else if(isOpen) {
+            //clear the target file
+            $('span.filename-display').empty();
+            $('span.filepath-display').empty();
+
+            //change the PDF target filepath
+            filepath = $(this).attr('href');
+            filename = $(this).html();
+
+            //display selected
+            $('span.filename-display').append(filename);
+            $('span.filepath-display').append(filepath);
+
+            //console.log('pdf HREF:'+filepath);
+            //console.log('pdf filename:'+filename);
+          }
         } // end cookie if/else
       }); // end pdf click hijack
     } // end function:attach
-
-    /*
-    verifyClose: function verifyClose() {
-      var isOpen=true;
-      console.log('close the form');
-      //slide it back up
-      jQuery('#verify-form').slideUp(600,function(){
-        //ditch the form
-        jQuery('#verify-form').remove();
-        isOpen = false;
-      });
-      return isOpen; //is this required?
-    }
-    */
-
   } // end Drupal.behaviours.download_verify
-
 }(jQuery)); // end onload
 
 
 
 
+// Called by 'cancel' btn
+function verifyClose(){
+  var isOpen=true;
+  console.log('close the form');
+  //slide it back up
+  jQuery('#verify-form').slideUp(600,function(){
+    //ditch the form
+    jQuery('#verify-form').remove();
+    isOpen = false;
+  });
+  return isOpen; //is this required?
+}
 
-  //called by 'cancel' btn
-  function verifyClose(){
-    var isOpen=true;
-    console.log('close the form');
-    //slide it back up
-    jQuery('#verify-form').slideUp(600,function(){
-      //ditch the form
-      jQuery('#verify-form').remove();
-      isOpen = false;
-    });
-    return isOpen; //is this required?
-  }
-
-
-
-
-  //called from html form element'onsubmit' attrib
-  function validateForm(){
-    //event.preventDefault();
-    //check for empty fields
-    //TODO: all inputs need sanitized
-    var fname = jQuery('#edit-fname').val();
-    var sname = jQuery('#edit-sname').val();
-    var email = jQuery('#edit-email').val();
-    if((fname.length==0)||(sname.length==0)||(email.length==0)){
-      console.log('at least one empty field');
-      //TODO: detect which one is empty
-      //show errors
-      jQuery('#verify-form input[type=text]').addClass('error');
-      jQuery('.form-required').html('*');
-      jQuery('.form-required').append('Required');
-      return false;
+// Called from html form element'onsubmit' attrib
+function validateForm(){
+  //event.preventDefault();
+  //check for empty fields
+  //TODO: all inputs need sanitized
+  var fname = jQuery('#edit-fname').val();
+  var sname = jQuery('#edit-sname').val();
+  var email = jQuery('#edit-email').val();
+  if((fname.length==0)||(sname.length==0)||(email.length==0)){
+    console.log('at least one empty field');
+    //TODO: detect which one is empty
+    //show errors
+    jQuery('#verify-form input[type=text]').addClass('error');
+    jQuery('.form-required').html('*');
+    jQuery('.form-required').append('Required');
+    return false;
+  }else{
+    console.log('all fields have a value');
+    //check for previous email format error
+    var email_error_shown = jQuery('#verify-form input#edit-email.error.email-format');
+    if(email_error_shown) {
+      console.log("email error displayed");
+      jQuery('#verify-form input#edit-email').removeClass('error email-format');
+      jQuery('.form-item-email .form-required').html('*');
+      console.log("email error removed");
     }else{
-      console.log('all fields have a value');
-
-      //check for previous email format error
-      var email_error_shown = jQuery('#verify-form input#edit-email.error.email-format');
-      if(email_error_shown) {
-        console.log("email error displayed");
-        jQuery('#verify-form input#edit-email').removeClass('error email-format');
-        jQuery('.form-item-email .form-required').html('*');
-        console.log("email error removed");
-      }else{
-        console.log("no email error");
-      }
-
-
-
-      //TODO: check for characters not numbers in fname, sname
-      //   - set on keypress attrib of textfield
-
-      //TODO: check string length, set minimum
-
-      //TODO: regex to check email follows correct format
-      var valid_email = download_verify_check_email_format(email);
-
-      if(valid_email) { // if the email is valid
-        //get the file path
-        filepath = jQuery('span.filepath-display').html();
-        console.log('filepath:'+filepath);
-
-        //set the cookie
-        //user_cookie_save(array('downloadverifyform' => '1'));
-        jQuery.cookie("downloadverifyform", "1", { expires: 365 });
-        //email details
-
-        //start the file download
-        var downloadURL = function downloadURL(filepath) {
-          var hiddenIFrameID = 'hiddenDownloader';
-          iframe = document.getElementById(hiddenIFrameID);
-          if (iframe === null) {
-            iframe = document.createElement('iframe');
-              iframe.id = hiddenIFrameID;
-              iframe.style.display = 'none';
-              document.body.appendChild(iframe);
-          }
-          iframe.src = filepath;
-        };
-        downloadURL(filepath);
-
-        return true;
-
-      } else {
-        //email format fail
-        jQuery('#verify-form input#edit-email').addClass('error email-format');
-        jQuery('.form-item-email .form-required').html('*');
-        jQuery('.form-item-email .form-required').append('Incorrect Format');
-
-        return false;
-
-      }
-
-
-
+      console.log("no email error");
     }
-  }
 
-  // Called on textfield keypress to enfore characters only, no numbers
-  function download_verify_letters_only(evt) {
-       evt = (evt) ? evt : event;
-       var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
-          ((evt.which) ? evt.which : 0));
-       if (charCode > 31 && (charCode < 65 || charCode > 90) &&
-          (charCode < 97 || charCode > 122)) {
-          alert("Enter letters only.");
-          return false;
-       }
-       return true;
-     }
+    //TODO: check for characters not numbers in fname, sname
+    //   - set on keypress attrib of textfield
 
-  // Check email format is valid
-  function download_verify_check_email_format(email_address) {
-    console.log("testing email");
-    console.log("email: "+email_address);
-    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    //var filter = /\S+@\S+\.\S+/;
+    //TODO: check string length, set minimum
 
-    if (!filter.test(email_address)) {
-      console.log("email fail");
-      return false;
+    //TODO: regex to check email follows correct format
+    var valid_email = download_verify_check_email_format(email);
+    if(valid_email) { // if the email is valid
+      //get the file path
+      filepath = jQuery('span.filepath-display').html();
+      console.log('filepath:'+filepath);
 
-    }else{
-      console.log("email pass");
+      var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;
+      var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
+      console.log("cookie check at save: " + download_verify_cookie_display + " - " + download_verify_cookie_expiry);
+
+      //set the cookie
+      //user_cookie_save(array('downloadverifyform' => '1'));
+      if(download_verify_cookie_display == 1) {
+        jQuery.cookie("downloadverifyform", "1", { expires: download_verify_cookie_expiry });
+      }
+      //email details
+
+      //close the form
+      return verifyClose();
+
+      //start the file download
+      var downloadURL = function downloadURL(filepath) {
+        var hiddenIFrameID = 'hiddenDownloader';
+        iframe = document.getElementById(hiddenIFrameID);
+        if (iframe === null) {
+          iframe = document.createElement('iframe');
+          iframe.id = hiddenIFrameID;
+          iframe.style.display = 'none';
+          document.body.appendChild(iframe);
+        }
+        iframe.src = filepath;
+      };
+      downloadURL(filepath);      
+
       return true;
-
+    } else {
+      //email format fail
+      jQuery('#verify-form input#edit-email').addClass('error email-format');
+      jQuery('.form-item-email .form-required').html('*');
+      jQuery('.form-item-email .form-required').append('Incorrect Format');
+      return false;
     }
   }
+}
 
-    //called when user already has cookie set, direct download
-  function begin_download(filepath){
-    //event.preventDefault();
+// Called on textfield keypress to enfore characters only, no numbers
+function download_verify_letters_only(evt) {
+  evt = (evt) ? evt : event;
+  var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
+  ((evt.which) ? evt.which : 0));
+  if (charCode > 31 && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)) {
+    //alert("Enter letters only."); //to intrusive
+    return false;
+  }
+  return true;
+}
 
-        //set a new cookie
-        jQuery.cookie("downloadverifyform", "1", { expires: 365 });
+// Check email format is valid
+function download_verify_check_email_format(email_address) {
+  console.log("testing email");
+  console.log("email: "+email_address);
+  var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  //var filter = /\S+@\S+\.\S+/;
+  if (!filter.test(email_address)) {
+    console.log("email fail");
+    return false;
+  } else {
+    console.log("email pass");
+    return true;
+  }
+}
 
-        //start the file download
-        var downloadURL = function downloadURL(filepath) {
-          var hiddenIFrameID = 'hiddenDownloader';
-          iframe = document.getElementById(hiddenIFrameID);
-          if (iframe === null) {
-            iframe = document.createElement('iframe');
-              iframe.id = hiddenIFrameID;
-              iframe.style.display = 'none';
-              document.body.appendChild(iframe);
-          }
-          iframe.src = filepath;
-        };
-        downloadURL(filepath);
+// Called when user already has cookie set, direct download
+function begin_download(filepath){
+  //event.preventDefault();
+  //set a new cookie
+  jQuery.cookie("downloadverifyform", "1", { expires: 365 });
+  //start the file download
+  var downloadURL = function downloadURL(filepath) {
+    var hiddenIFrameID = 'hiddenDownloader';
+    iframe = document.getElementById(hiddenIFrameID);
+    if (iframe === null) {
+      iframe = document.createElement('iframe');
+      iframe.id = hiddenIFrameID;
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+    iframe.src = filepath;
+  };
+  downloadURL(filepath);
 
-        return true;
-
-
-      }
-
-
+  return true;
+}
