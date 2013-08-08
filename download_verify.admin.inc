@@ -25,7 +25,7 @@ function download_verify_configuration_form($form, &$form_state) {
   $form['download_verify_mail_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Mail configuration'),
-    '#description' => t('Enter the e-mail address to be used for form submission configuration. This email address will not be exposed to the site visitor.'),
+    '#description' => t('Enter the e-mail address to be used for form submission configuration. This e-mail address will not be exposed to the site visitor.'),
     '#weight' => 1,
     '#collapsible' => FALSE,
   );
@@ -37,15 +37,13 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 2,
     '#collapsible' => FALSE,
   );
+  $download_verify_css_target_settings_description = filter_xss_admin('<p>Enter the CSS class name to be used for attaching the form to.<p><p>This can be any <em>wrapper</em> element that contains any number of HTML achor tags.</p>Suggested formats could be: <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;a link&lt;/a&gt;<br />&nbsp;&nbsp;&lt;a&gt;another link&lt;/a&gt;<br />&lt;/div&gt;</code><code>&lt;ul class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;a link&lt;/a&gt;&lt;/li&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;another link&lt;/a&gt;&lt;/li&gt;<br />&lt;/ul&gt;</code> <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;&lt;img /&gt;&lt;/a&gt;<br />&lt;/div&gt;</code>');
 
   // Set up the CSS reference container.
   $form['download_verify_css_target_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('CSS target configuration'),
-    '#description' => t('<p>Enter the CSS class name to be used for attaching the form to.<p><p>This can be any <em>wrapper</em> element that contains any number of HTML achor tags.</p>Suggested formats could be: <code>
-      &lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;a link&lt;/a&gt;<br />&nbsp;&nbsp;&lt;a&gt;another link&lt;/a&gt;<br />&lt;/div&gt;</code>
-      <code>&lt;ul class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;a link&lt;/a&gt;&lt;/li&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;another link&lt;/a&gt;&lt;/li&gt;<br />&lt;/ul&gt;</code>
-      <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;&lt;img /&gt;&lt;/a&gt;<br />&lt;/div&gt;</code>'),
+    '#description' => $download_verify_css_target_settings_description,
     '#weight' => 3,
     '#collapsible' => FALSE,
   );
@@ -75,10 +73,9 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 6,
     '#collapsible' => FALSE,
   );
-  
+
   // Form element for setting footer text.
-  // needs placeholder for link to privacy policy.
-  // opt in to display link
+  // @todo: needs placeholder for link to privacy policy.
   $form['download_verify_footer_text_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Footer text content'),
@@ -89,13 +86,13 @@ function download_verify_configuration_form($form, &$form_state) {
   // Single text field for footer text entry.
   $form['download_verify_footer_text_settings']['download_verify_footer_text'] = array(
     '#type' => 'textfield',
-    '#default_value' => variable_get('download_verify_footer_text', 'Emails are collected for marketing purposes in line with our <a href="#" title="">privacy policy</a>.'),
+    '#default_value' => variable_get('download_verify_footer_text', 'Emails are collected for marketing purposes in line with our [privacy policy].'),
     '#title' => t('The text to display'),
     '#weight' => 8,
     '#collapsible' => FALSE,
   );
 
-  // Set up fieldset for cookie options
+  // Set up fieldset for cookie options.
   $form['download_verify_cookie_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Cookie options'),
@@ -103,45 +100,35 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 9,
     '#collapsible' => FALSE,
   );
-  // Set up radio buttons for optional cookie setting
+  // Set up radio buttons for optional cookie setting.
   $form['download_verify_cookie_settings']['download_verify_cookie_display'] = array(
     '#type' => 'radios',
     '#title' => t('Set cookie on form submission.'),
     '#default_value' => variable_get('download_verify_cookie_display', 0),
     '#options' => array(
-        0 => t('Off'),
-        1 => t('On'),
-      ),
+      0 => t('Off'),
+      1 => t('On'),
+    ),
     '#description' => t('Optional setting of the cookie on the users system. When this is set to <em>Off</em> then the module will not check for the presence of previous cookies either.'),
   );
-  // Declare the cookie expiry options
-  /*
-  $form['download_verify_cookie_settings']['download_verify_cookie_expiry_values'] = array(
-      '#type' => 'value',
-      '#value' => array(
-        t('1 day'),
-        t('1 week'),
-        t('1 month'),
-        t('3 months'),
-        t('6 months'),
-        t('1 year')
-      )
-    );
-  */
-  $download_verify_cookie_expiry_values = drupal_map_assoc(array(86400, 604800, 2419200, 7776000, 15552000, 31104000), 'format_interval');
-  // Set up the select element for the cookie expiry time
+  // Declare the cookie expiry options.
+  $download_verify_cookie_expiry_values = drupal_map_assoc(array(
+    86400,
+    604800,
+    2419200,
+    7776000,
+    15552000,
+    31104000
+  ), 'format_interval');
+  // Set up the select element for the cookie expiry time.
   $form['download_verify_cookie_settings']['download_verify_cookie_expiry'] = array(
-      '#type' => 'select',
-      '#title' => 'Cookie expiry time.',
-      '#default_value' => variable_get('download_verify_cookie_expiry', 0),
-      '#options' => $download_verify_cookie_expiry_values,
-      '#description' => t('Set the expiry period for the cookie that is set on the users system.'),
-          
-        
-    );
-
-  // Textarea element for setting the body of the email sent.
-     //TODO: Use placeholder tokens for details.
-
+    '#type' => 'select',
+    '#title' => 'Cookie expiry time.',
+    '#default_value' => variable_get('download_verify_cookie_expiry', 0),
+    '#options' => $download_verify_cookie_expiry_values,
+    '#description' => t('Set the expiry period for the cookie that is set on the users system.'),        
+  );
+  // @todo: Additional textarea element for setting the body of the email sent.
+  // @todo: Use placeholder tokens for details.
   return system_settings_form($form);
 }

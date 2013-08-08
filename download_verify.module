@@ -8,23 +8,20 @@
 /**
  * Implements hook_init().
  */
- //is it better to use 'function download_verify_preprocess_html(&$vars)' ??
-
 function download_verify_init() {
-  //get all the required variables.
+  global $base_path;
+  // Get all the required variables.
   $download_verify_settings = array(
     'download_verify_email' => variable_get('download_verify_email'),
     'download_verify_css_target' => variable_get('download_verify_css_target'),
     'download_verify_intro_text' => variable_get('download_verify_intro_text'),
     'download_verify_footer_text' => variable_get('download_verify_footer_text'),
-    //'download_verify_ui_form' => download_verify_ui_form($form, &$form_state),
     'download_verify_cookie_display' => variable_get('download_verify_cookie_display'),
     'download_verify_cookie_expiry' => variable_get('download_verify_cookie_expiry'),
     'download_verify_mail_script_path' => drupal_get_path('module', 'download_verify') . "/download_verify_mail_send.php",
-    );
-    drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
-    global $base_path;
-    drupal_add_js($base_path . 'misc/jquery.cookie.js');
+  );
+  drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
+  drupal_add_js($base_path . 'misc/jquery.cookie.js');
 }
 
 /**
@@ -63,127 +60,3 @@ function download_verify_menu() {
   );
   return $items;
 }
-
-define('DOWNLOAD_VERIFY_MAIL_TEXT',
-  'This is an automated email from [site:name],
-
-  Please add my name and email address to your site marketing list.
-  Full Name: [user:firstname] [user:surname]
-  Email: [user:email]
-  ');
-
-/**
- * Form submit for front facing form
- */
-function download_verify_form_submit($form, &$form_state) {
-  drupal_set_message(t('<p>form submit</p>'));
-
-  return TRUE;
-}
-
-
-
-
-/**
- * Form Builder.
- *
- * Create the slideout form using the Form API
- * --problematic injecting form into variable
- * --and passed to javascript
- */
- /*
-function download_verify_ui_form($form, &$form_state) {
-  // Get the path to the module.
-  $path = drupal_get_path('module', 'download_verify');
-  // Attach the CSS to the form.
-  $form['#attached'] = array(
-    'css' => array(
-      'type' => 'file',
-      'data' => $path . '/css/download_verify.css',
-    ),
-  );
-
-
-  $form['wrapper'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array(
-        'field-type-' . drupal_html_class($field['type']),
-        'field-name-' . drupal_html_class($field_name),
-        'field-widget-' . drupal_html_class($instance['widget']['type']),
-      ),
-    ),
-    '#weight' => $instance['widget']['weight'],
-  );
-
-  $form['wrapper']['download_verify_fname'] = array(
-    '#type' => 'textfield',
-    //'#default_value' => variable_get('download_verify_email', 'yourname@example.com'),
-    '#title' => t('First name.'),
-    '#weight' => 2,
-    '#collapsible' => FALSE,
-  );
-
-  $form['wrapper']['download_verify_sname'] = array(
-    '#type' => 'textfield',
-    //'#default_value' => variable_get('download_verify_email', 'yourname@example.com'),
-    '#title' => t('Surname.'),
-    '#weight' => 3,
-    '#collapsible' => FALSE,
-  );
-
-  $form['wrapper']['download_verify_email'] = array(
-    '#type' => 'textfield',
-    //'#default_value' => variable_get('download_verify_email', 'yourname@example.com'),
-    '#title' => t('Email.'),
-    '#weight' => 4,
-    '#collapsible' => FALSE,
-  );
-
-  $form['wrapper']['actions'] = array('#type' => 'actions');
-  $form['wrapper']['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Download'),
-  );
-  $form['wrapper']['actions']['cancel'] = array(
-    '#type' => 'cancel',
-    '#value' => t('Cancel'),
-  );
-  return $form;
-}
-*/
-
-/**
- * Implements hook_mail().
- */
-
- // usage:
- // drupal_mail($module, $key, $to, $language, $params = array('username' => 'John Potato'), $from = NULL, $send = TRUE)
-/*
-function download_verify_mail ($key, &$message, $params) {
-  switch ($key) {
-    case 'mymail':
-      // Set headers etc
-      $message['to'] = 'ray@junglecreative.com'; //change to db value
-      $message['subject'] = t('File Download');
-      $message['body'][] = t('Site Visistor @username has downloaded a file and submitted their details for marketing purposes,', array('@username' => $params['username']));
-      $message['body'][] = t('The main part of the message.');
-      break;
-  }
-}
-*/
-
-/**
- * Implements hook_form_alter().
- */
-//function download_verify_form_alter(&$form, &$form_state, $form_id) {
-  //dsm($form_id);  // print form ID to messages
-  //dsm($form);  // pretty print array using Krumo to messages
-//}
-
-/**
- * Implements hook_mail_send().
- */
-
-
-
