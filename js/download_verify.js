@@ -67,7 +67,7 @@
       var introtext = Drupal.theme('download_verify_intro_text_wrapper', download_verify_intro_text);
       var footertext = Drupal.theme('download_verify_footer_text_wrapper', download_verify_footer_text);
       var theform = Drupal.theme('download_verify_ui_form');
-      var verifyForm = '<div id="verify-form">' + introtext + theform + footertext + "</div>";
+      var verifyForm = '<div id="download-verify-form-wrapper">' + introtext + theform + footertext + "</div>";
       var isOpen;
       var filepath;
 
@@ -86,7 +86,7 @@
           // No cookie found on the users system.
           event.preventDefault();
           // Check if the form is open.
-          if($('#verify-form').length > 0){
+          if($('#download-verify-form-wrapper').length > 0){
             isOpen = true;
           }else{
             isOpen = false;
@@ -104,7 +104,7 @@
             $('span.filename-display').append(filename);
             $('span.filepath-display').append(filepath);
             // Slide out the form.
-            $('#verify-form').slideDown(600, function(){
+            $('#download-verify-form-wrapper').slideDown(600, function(){
               isOpen = true;
             });
 
@@ -142,8 +142,8 @@
 // Called by 'cancel' btn to close the form.
 function verifyClose(){
   var isOpen=true;
-  jQuery('#verify-form').slideUp(600,function(){
-    jQuery('#verify-form').remove();
+  jQuery('#download-verify-form-wrapper').slideUp(600,function(){
+    jQuery('#download-verify-form-wrapper').remove();
     isOpen = false;
   });
   return isOpen;
@@ -162,21 +162,22 @@ function validateForm(){
     console.log('at least one empty field');
     // @todo: detect which one is empty
     // Show errors.
-    jQuery('#verify-form input[type=text]').addClass('error');
+    jQuery('#download-verify-form-wrapper input[type=text]').addClass('error');
     jQuery('.form-required').html('*');
     jQuery('.form-required').append('Required');
     return false;
   }else{
     console.log('all fields have a value');
     // Check for previous email format error.
-    var email_error_shown = jQuery('#verify-form input#edit-email.error.email-format');
-    if(email_error_shown) { // Need better checking.
+    var email_error_shown = jQuery('#download-verify-form-wrapper input#edit-email.error');
+    //if(email_error_shown) { // Need better checking.
+    if(jQuery('#download-verify-form-wrapper input#edit-email.error').length > 0) { // Need better checking.
       console.log("email error displayed");
-      jQuery('#verify-form input#edit-email').removeClass('error email-format');
+      jQuery('#download-verify-form-wrapper input#edit-email').removeClass('error email-format');
       jQuery('.form-item-email .form-required').html('*');
       console.log("email error removed");
     }else{
-      console.log("no email error");
+      console.log("no email error displayed");
     }
 
     // @todo: check for characters not numbers in fname, sname
@@ -202,14 +203,17 @@ function validateForm(){
 
       // Start the file download.
       console.log("pass to dl: L208 -> filepath="+filepath);
-      download_verify_begin_download(filepath);
+      var download_verify_success = false;
+      download_verify_success = download_verify_begin_download(filepath);
 
       // Close the form.
-      return verifyClose();
+      if(download_verify_success) {
+        return verifyClose();
+      }
 
     } else {
       // Email format fail.
-      jQuery('#verify-form input#edit-email').addClass('error email-format');
+      jQuery('#download-verify-form-wrapper input#edit-email').addClass('error email-format');
       jQuery('.form-item-email .form-required').html('*');
       jQuery('.form-item-email .form-required').append('Incorrect Format');
       return false;

@@ -13,6 +13,10 @@
 function download_verify_configuration_form($form, &$form_state) {
   // Get the path to the module.
   $path = drupal_get_path('module', 'download_verify');
+  // Add Honeypot protection, is the module available?
+  // @see https://drupal.org/project/honeypot
+  // honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+
   // Attach the CSS to the form.
   $form['#attached'] = array(
     'css' => array(
@@ -37,13 +41,15 @@ function download_verify_configuration_form($form, &$form_state) {
     '#weight' => 2,
     '#collapsible' => FALSE,
   );
-  $download_verify_css_target_settings_description = filter_xss_admin('<p>Enter the CSS class name to be used for attaching the form to.<p><p>This can be any <em>wrapper</em> element that contains any number of HTML achor tags.</p>Suggested formats could be: <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;a link&lt;/a&gt;<br />&nbsp;&nbsp;&lt;a&gt;another link&lt;/a&gt;<br />&lt;/div&gt;</code><code>&lt;ul class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;a link&lt;/a&gt;&lt;/li&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;another link&lt;/a&gt;&lt;/li&gt;<br />&lt;/ul&gt;</code> <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;&lt;img /&gt;&lt;/a&gt;<br />&lt;/div&gt;</code>');
 
+  // Set up the description for the CSS reference container.
+  // HTML used to demonstrate code structure for less experienced end users.
+  $download_verify_css_target_settings_description = '<p>Enter the CSS class name to be used for attaching the form to.<p><p>This can be any <em>wrapper</em> element that contains any number of HTML achor tags.</p>Suggested formats could be: <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;a link&lt;/a&gt;<br />&nbsp;&nbsp;&lt;a&gt;another link&lt;/a&gt;<br />&lt;/div&gt;</code><code>&lt;ul class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;a link&lt;/a&gt;&lt;/li&gt;<br />&nbsp;&nbsp;&lt;li&gt;&lt;a&gt;another link&lt;/a&gt;&lt;/li&gt;<br />&lt;/ul&gt;</code> <code>&lt;div class="<em>target-classname</em>"&gt;<br />&nbsp;&nbsp;&lt;a&gt;&lt;img /&gt;&lt;/a&gt;<br />&lt;/div&gt;</code>';
   // Set up the CSS reference container.
   $form['download_verify_css_target_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('CSS target configuration'),
-    '#description' => $download_verify_css_target_settings_description,
+    '#description' => filter_xss_admin($download_verify_css_target_settings_description),
     '#weight' => 3,
     '#collapsible' => FALSE,
   );
@@ -110,6 +116,8 @@ function download_verify_configuration_form($form, &$form_state) {
       1 => t('On'),
     ),
     '#description' => t('Optional setting of the cookie on the users system. When this is set to <em>Off</em> then the module will not check for the presence of previous cookies either.'),
+    '#weight' => 10,
+    '#collapsible' => FALSE,
   );
   // Declare the cookie expiry options.
   $download_verify_cookie_expiry_values = drupal_map_assoc(array(
@@ -126,7 +134,9 @@ function download_verify_configuration_form($form, &$form_state) {
     '#title' => 'Cookie expiry time.',
     '#default_value' => variable_get('download_verify_cookie_expiry', 0),
     '#options' => $download_verify_cookie_expiry_values,
-    '#description' => t('Set the expiry period for the cookie that is set on the users system.'),        
+    '#description' => t('Set the expiry period for the cookie that is set on the users system.'),
+    '#weight' => 11,
+    '#collapsible' => FALSE,        
   );
   // @todo: Additional textarea element for setting the body of the email sent.
   // @todo: Use placeholder tokens for details.

@@ -5,19 +5,15 @@
  * note: all attempts should be made to utilise existing
  * CSS rules within the site stylesheets
  */
-#verify-form {
+#download-verify-form-wrapper {
   display:none;
 }
-span.tfile {
-  font-size:10px;
-}
-p.small {
+p.small,
+p.msgbox {
   font-size:0.8em;
   line-height:1.1em;
 }
-
 p.msgbox {
-  font-size:0.9em;
   clear:both;
 }
 span.form-required {
@@ -33,52 +29,15 @@ code{
   background: #ededed;
   color: #313131;
   padding:5px 10px!important;
-  /*
-  font-family: System, Arial, Helvetica, sans-serif;
-  font-size: 0.8em!important;
-  */
 }
 
-/* TODO: change trigger to default error style in existing stylesheet*/
+/* @todo: change trigger to default error style in existing stylesheet*/
 input.in-error {
   border-color: red;
   background-color:#F46565;
 }
 
-/* TODO: need to hook into site default styles better*/
+/* @todo: need to hook into site default styles better*/
 .button {
   word-wrap: normal;
 }
-/*
-.button {
-  background-attachment: scroll;
-  background-clip: border-box;
-  background-image: none;
-  background-origin: padding-box;
-  background-position: 0 0;
-  background-repeat: repeat;
-  background-size: auto auto;
-  text-shadow: none;
-  float:left;
-  min-width: 65px;
-  padding-bottom: 0.32em;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  padding-top: 0.32em;
-  text-align: center;
-}
-
-.button:hover {
-  opacity:0.8;
-  cursor:pointer;
-}
-.button.form-submit {
-  background-color:#7a7964;
-  color:#ffffff;
-}
-.button.form-cancel {
-  background-color:#d9d9d1;
-  color:#000000;
-  margin-left:8px;
-}
-*/
