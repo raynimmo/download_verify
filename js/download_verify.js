@@ -282,6 +282,8 @@ function download_verify_check_email_format(email_address) {
 }
 
 // Called when user already has cookie set, direct download.
+// Error in Chrome console:
+//    Resource interpreted as Document but transferred with MIME type application/pdf
 function download_verify_begin_download(filepath) {
   // Start the file download.
   console.log("download from: " + filepath);
