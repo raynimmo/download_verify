@@ -15,7 +15,7 @@
   };
 
   // Footer section of text on slide-out panel with optional link.
-  // TODO : use token replacement for {privacy-policy} link.
+  // @todo : use token replacement for {privacy-policy} link.
   Drupal.theme.prototype.download_verify_footer_text_wrapper = function(download_verify_footer_text) {
     return '<p class="small">' + download_verify_footer_text + '</p>';
   };
@@ -116,21 +116,18 @@
 
       // Hijack the pdf clicks.
       $('.' + download_verify_css_target +' a', context).click(function(event){
+        event.preventDefault();
         filepath = $(this).attr('href');
         // Check for cookie on users machine.
         if(download_verify_cookie_display == '1') {
-          console.log("cookies enabled");
           var existing_cookie = jQuery.cookie("downloadverifyform");
-          console.log("cookie query: " + existing_cookie);
         }
         // User already has cookie set indicating previous form completion.
         if(existing_cookie && download_verify_cookie_display!=0){
-          console.log("has cookie already: " + existing_cookie);
-          console.log("pass to dl: L129 -> filepath="+filepath);
           Drupal.behaviors.download_verify_file_handler(filepath);
         }else{
           // No cookie found on the users system.
-          event.preventDefault();
+          // event.preventDefault();
           // Check if the form is open.
           if($('#download-verify-form-wrapper').length > 0){
             isOpen = true;
@@ -178,7 +175,6 @@
    */  
   Drupal.behaviors.download_verify_close = function(context) {
     var isOpen = true;
-    console.log("dvc close");
     $('#download-verify-form-wrapper').slideUp(600, function() {
       $('#download-verify-form-wrapper').remove();
       isOpen = false;
@@ -199,22 +195,16 @@
 
     // Check for empty fields.
     if((dv_fname.length==0)||(dv_sname.length==0)||(dv_email.length==0)){
-
-      console.log('at least one empty field');
       // @todo: detect which one is empty
       // Show errors.
       Drupal.behaviors.download_verify_form_errors_show();
       return false;
 
     } else {
-
-      console.log('all fields have a value');
       // Check for previous email format error.
       var email_error_shown = $('#download-verify-form-wrapper input#edit-email.error');
 
-      //if(email_error_shown) { // Need better checking.
-      if($('#download-verify-form-wrapper input#edit-email.error').length > 0) { // Need better checking.
-        console.log("email error displayed");
+      if($('#download-verify-form-wrapper input#edit-email.error').length > 0) {
         Drupal.behaviors.download_verify_form_errors_clear();
       }else{
         console.log("no email error displayed");
@@ -231,7 +221,6 @@
       if(valid_email) { // if the email is valid.
         // Get the file path.
         filepath = $('span.filepath-display').html();
-        console.log('filepath:'+filepath);
 
         // Set the cookie.
         var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;     
@@ -245,7 +234,6 @@
         Drupal.behaviors.download_verify_send_mail(dv_fname, dv_sname, dv_email);
 
         // Start the file download.
-        console.log("pass to dl: L208 -> filepath="+filepath);
         var download_verify_success = false;
         download_verify_success = Drupal.behaviors.download_verify_file_handler(filepath);
 
@@ -286,20 +274,16 @@
   Drupal.behaviors.download_verify_form_errors_clear = function(context) {
     $('#download-verify-form-wrapper input#edit-email').removeClass('error email-format');
     $('.form-item-email .form-required').html('*');
-    console.log("email error removed");
   };
 
   /**
    * Check email format follows a common format of xxx@xxx.xxx
    */
   Drupal.behaviors.download_verify_check_email_format = function(submitted_email) {
-    console.log("Testing submitted email address : " + submitted_email);
     var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if (!filter.test(submitted_email)) {
-      console.log("email fail");
       return false;
     } else {
-      console.log("email pass");
       return true;
     }
   };
@@ -310,7 +294,6 @@
   Drupal.behaviors.download_verify_send_mail = function(dv_fname, dv_sname, dv_email) {
     // Get required variables.
     var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
-    console.log("mailscript path : " + Drupal.settings.download_verify.download_verify_mail_script_path);
     var download_verify_email = Drupal.settings.download_verify.download_verify_email;
     var post_string = "?dvsendto="  + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
     // Set up the xhr object
@@ -321,7 +304,7 @@
       xhr = new ActiveXObject("Msxml2.XMLHTTP");
     }else{
       throw new Error("Ajax is not supported by this browser");
-      console.log("Ajax not supported");
+      //console.log("Ajax not supported");
     }
     // Get the file path.
     xhr.open('GET', download_verify_mail_script_path + post_string);
@@ -329,15 +312,15 @@
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
-          console.log("xhr.responsetext: " + xhr.responseText);
+          //console.log("xhr.responsetext: " + xhr.responseText);
           if(xhr.responseText=='Mail sent'){
-            console.log("email sent: L241");
+            //console.log("email sent: L241");
           }else{
-            console.log("email not sent: L243");
+            //console.log("email not sent: L243");
           }        
         }
       }else{
-        console.log("waiting for response: L247");
+        //console.log("waiting for response: L247");
       }
     }
     xhr.send(null);
@@ -345,27 +328,10 @@
 
   /**
    * File download handler.
-   * 
-   * Function creates an iframe element and appends the filepath to this to begin the file download
-   * Error in Chrome console:
-   * - Resource interpreted as Document but transferred with MIME type application/pdfjavascript set content type header
    */
   Drupal.behaviors.download_verify_file_handler = function(filepath) {
     // Start the file download.
-    console.log("download from: " + filepath);
-    var downloadURL = function downloadURL(filepath) {
-      var hiddenIFrameID = 'hiddenDownloader';
-      iframe = document.getElementById(hiddenIFrameID);
-      if (iframe === null) {
-        iframe = document.createElement('iframe');
-        iframe.id = hiddenIFrameID;
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-      }
-      iframe.src = filepath;
-    };
-    downloadURL(filepath);
-
+    window.open(filepath);
     return true;
   };
 
@@ -373,7 +339,7 @@
    * Textfield validation.
    *
    * Called on textfield keypress to enfore characters only, no numbers.
-   * - Currently nused, need to be able to add hyphenation, etc.
+   * - Currently unused, need to be able to add hyphenation, etc.
    */
    Drupal.behaviors.download_verify_validate_textfield = function(evt) {
     evt = (event) ? evt : event;
