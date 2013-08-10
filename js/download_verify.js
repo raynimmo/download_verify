@@ -12,13 +12,13 @@
    */
   Drupal.theme.prototype.download_verify_intro_text_wrapper = function(download_verify_intro_text) {
     return '<p class="small">' + download_verify_intro_text + '</p>';
-  }
+  };
 
   // Footer section of text on slide-out panel with optional link.
   // TODO : use token replacement for {privacy-policy} link.
   Drupal.theme.prototype.download_verify_footer_text_wrapper = function(download_verify_footer_text) {
     return '<p class="small">' + download_verify_footer_text + '</p>';
-  }
+  };
 
   /**
    * Form textfield for first name.
@@ -29,7 +29,7 @@
                   + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname" />'
                   + '</div>';
     return element;
-  }
+  };
 
   /**
    * Form textfield for surname.
@@ -40,7 +40,7 @@
                   + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname" />'
                   + '</div>';
     return element;
-  }
+  };
 
   /**
    * Form textfield for email address.
@@ -51,7 +51,7 @@
                   + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email" />'
                   + '</div>';
     return element;
-  }
+  };
 
   /**
    * Form action buttons.
@@ -62,7 +62,7 @@
                   + '<a class="button form-cancel" id="edit-cancel" href="#" onclick="Drupal.behaviors.download_verify_close();">Cancel</a>'
                   + '</div>';
     return element;
-  }
+  };
 
   /**
    * Form UI feedback.
@@ -72,7 +72,7 @@
                   + '<span class="filename-display"></span><span class="filepath-display"></span>'
                   + '</p>';
     return element;
-  }
+  };
 
   /**
    * Form constructor.
@@ -86,7 +86,7 @@
              + Drupal.theme('download_verify_form_feedback')
              + '</div>';
     return the_form;
-  }
+  };
 
   /**
    * Configure for the module.
@@ -102,7 +102,9 @@
       var download_verify_intro_text = Drupal.settings.download_verify.download_verify_intro_text;
       var download_verify_footer_text = Drupal.settings.download_verify.download_verify_footer_text;
       var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;
-      var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
+      if(download_verify_cookie_display != 0) {
+        var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
+      }
 
       // set up the form.
       var introtext = Drupal.theme('download_verify_intro_text_wrapper', download_verify_intro_text);
@@ -116,12 +118,15 @@
       $('.' + download_verify_css_target +' a', context).click(function(event){
         filepath = $(this).attr('href');
         // Check for cookie on users machine.
-        if(download_verify_cookie_display ==1) {
+        if(download_verify_cookie_display == '1') {
+          console.log("cookies enabled");
           var existing_cookie = jQuery.cookie("downloadverifyform");
+          console.log("cookie query: " + existing_cookie);
         }
         // User already has cookie set indicating previous form completion.
         if(existing_cookie && download_verify_cookie_display!=0){
-          console.log("pass to dl: L83 -> filepath="+filepath);
+          console.log("has cookie already: " + existing_cookie);
+          console.log("pass to dl: L129 -> filepath="+filepath);
           Drupal.behaviors.download_verify_file_handler(filepath);
         }else{
           // No cookie found on the users system.
@@ -165,7 +170,7 @@
         }
       });
     },
-  }
+  };
 
 
   /**
@@ -179,7 +184,7 @@
       isOpen = false;
     });
     return isOpen;
-  }
+  };
 
 
   /**
@@ -255,7 +260,7 @@
         return false;
       }
     }
-  }
+  };
 
   /**
    * Form error display on all fields.
@@ -264,7 +269,7 @@
     $('#download-verify-form-wrapper input[type=text]').addClass('error');
     $('.form-required').html('*');
     $('.form-required').append('Required');
-  }
+  };
 
   /**
    * Form error display on email field
@@ -273,7 +278,7 @@
     $('#download-verify-form-wrapper input#edit-email').addClass('error email-format');
     $('.form-item-email .form-required').html('*');
     $('.form-item-email .form-required').append('Incorrect Format');
-  }
+  };
 
   /**
    * Clear form errors.
@@ -282,7 +287,7 @@
     $('#download-verify-form-wrapper input#edit-email').removeClass('error email-format');
     $('.form-item-email .form-required').html('*');
     console.log("email error removed");
-  }
+  };
 
   /**
    * Check email format follows a common format of xxx@xxx.xxx
@@ -297,7 +302,7 @@
       console.log("email pass");
       return true;
     }
-  }
+  };
 
   /**
    * Function for sending email in the background.
@@ -305,6 +310,7 @@
   Drupal.behaviors.download_verify_send_mail = function(dv_fname, dv_sname, dv_email) {
     // Get required variables.
     var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
+    console.log("mailscript path : " + Drupal.settings.download_verify.download_verify_mail_script_path);
     var download_verify_email = Drupal.settings.download_verify.download_verify_email;
     var post_string = "?dvsendto="  + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
     // Set up the xhr object
@@ -335,7 +341,7 @@
       }
     }
     xhr.send(null);
-  }
+  };
 
   /**
    * File download handler.
@@ -361,7 +367,7 @@
     downloadURL(filepath);
 
     return true;
-  }
+  };
 
   /**
    * Textfield validation.
@@ -377,6 +383,6 @@
       return false;
     }
     return true;
-   }  
+   };
 
 }(jQuery));

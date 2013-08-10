@@ -29,4 +29,4 @@ if ($download_verify_mailsend) {
 else {
   $download_verify_mail_result = 'Mail not sent';
 }
-return $download_verify_mail_result;
+echo $download_verify_mail_result;
