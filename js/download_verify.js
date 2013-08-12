@@ -69,9 +69,16 @@
    */
   Drupal.theme.prototype.download_verify_form_feedback = function() {
     var element = '<p class="msgbox"><b>Selected Download:</b><br />'
-                  + '<span class="filename-display"></span><span class="filepath-display"></span>'
+                  + '<span class="filename-display"></span>'
                   + '</p>';
     return element;
+  };
+
+  /**
+   * Form hidden element.
+   */
+  Drupal.theme.prototype.download_verify_form_hidden = function() {
+    return '<input type="hidden" name="filepath-value" value="filepath" class="filepath-value" />';
   };
 
   /**
@@ -84,6 +91,7 @@
              + Drupal.theme('download_verify_form_email')
              + Drupal.theme('download_verify_form_actions')
              + Drupal.theme('download_verify_form_feedback')
+             + Drupal.theme('download_verify_form_hidden')
              + '</div>';
     return the_form;
   };
@@ -127,7 +135,6 @@
           Drupal.behaviors.download_verify_file_handler(filepath);
         }else{
           // No cookie found on the users system.
-          // event.preventDefault();
           // Check if the form is open.
           if($('#download-verify-form-wrapper').length > 0){
             isOpen = true;
@@ -145,8 +152,7 @@
 
             // Display selected.
             $('span.filename-display').append(filename);
-            $('span.filepath-display').append(filepath);
-            // Slide out the form.
+            $('input[name=filepath-value]').val(filepath);
             $('#download-verify-form-wrapper').slideDown(600, function(){
               isOpen = true;
             });
@@ -154,21 +160,18 @@
           }else if(isOpen) {
             // Clear the target file.
             $('span.filename-display').empty();
-            $('span.filepath-display').empty();
-
             // Change the PDF target filepath.
             filepath = $(this).attr('href');
             filename = $(this).html();
 
             // Display selected.
             $('span.filename-display').append(filename);
-            $('span.filepath-display').append(filepath);
+            $('input[name=filepath-value]').val(filepath);
           }
         }
       });
     },
   };
-
 
   /**
    * Form close and remove.
@@ -181,7 +184,6 @@
     });
     return isOpen;
   };
-
 
   /**
    * Form submit validation.
@@ -220,12 +222,11 @@
       
       if(valid_email) { // if the email is valid.
         // Get the file path.
-        filepath = $('span.filepath-display').html();
+        filepath = $('input[name=filepath-value]').val();
 
         // Set the cookie.
         var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;     
         var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry; 
-
         if(download_verify_cookie_display == 1) {
           $.cookie("downloadverifyform", "1", { expires: download_verify_cookie_expiry });
         }
@@ -304,7 +305,6 @@
       xhr = new ActiveXObject("Msxml2.XMLHTTP");
     }else{
       throw new Error("Ajax is not supported by this browser");
-      //console.log("Ajax not supported");
     }
     // Get the file path.
     xhr.open('GET', download_verify_mail_script_path + post_string);
