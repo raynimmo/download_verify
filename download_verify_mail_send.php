@@ -4,11 +4,19 @@
  * Simple mail script for JavaScript mail submission.
  */
 
+/**
+ * Copy of check_plain() for local use.
+ */
+function check_plain($text) {
+  return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+}
+
 // Get the POSTed variables.
+// Sanitize all user submitted variables in case of spoofed request.
 $download_verify_sendto = $_GET['dvsendto'];
-$download_verify_fname = $_GET['dvfname'];
-$download_verify_sname = $_GET['dvsname'];
-$download_verify_email = $_GET['dvemail'];
+$download_verify_fname = check_plain($_GET['dvfname']);
+$download_verify_sname = check_plain($_GET['dvsname']);
+$download_verify_email = check_plain($_GET['dvemail']);
 
 // Build the email.
 $download_verify_subject = '[FORM SUBMISSION] PDF Download';

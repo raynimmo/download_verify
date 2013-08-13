@@ -25,8 +25,8 @@
    */
   Drupal.theme.prototype.download_verify_form_fname = function() {
     var element = '<div class="form-item form-type-textfield form-item-fname">'
-                  + '<label for="edit-fname">First name <span title="This field is required." class="form-required">*</span></label>'
-                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="edit-fname" />'
+                  + '<label for="download-verify-fname-field">First name <span title="This field is required." class="form-required">*</span></label>'
+                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="download-verify-fname-field" />'
                   + '</div>';
     return element;
   };
@@ -36,8 +36,8 @@
    */
   Drupal.theme.prototype.download_verify_form_sname = function() {
     var element = '<div class="form-item form-type-textfield form-item-sname">'
-                  + '<label for="edit-sname">Surname <span title="This field is required." class="form-required">*</span></label>'
-                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="edit-sname" />'
+                  + '<label for="download-verify-sname-field">Surname <span title="This field is required." class="form-required">*</span></label>'
+                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="download-verify-sname-field" />'
                   + '</div>';
     return element;
   };
@@ -68,9 +68,7 @@
    * Form UI feedback.
    */
   Drupal.theme.prototype.download_verify_form_feedback = function() {
-    var element = '<p class="msgbox"><b>Selected Download:</b><br />'
-                  + '<span class="filename-display"></span>'
-                  + '</p>';
+    var element = '<p class="msgbox"><b>Selected Download:</b><br /><span class="filename-display"></span></p>';
     return element;
   };
 
@@ -170,7 +168,7 @@
           }
         }
       });
-    },
+    }
   };
 
   /**
@@ -191,8 +189,8 @@
   Drupal.behaviors.download_verify_validate_form = function(context) {
     // Extract values from textfields and sanitize.
     // @todo: replace Id's with specific class names.
-    var dv_fname = Drupal.checkPlain($('#edit-fname').val());
-    var dv_sname = Drupal.checkPlain($('#edit-sname').val());
+    var dv_fname = Drupal.checkPlain($('#download-verify-fname-field').val());
+    var dv_sname = Drupal.checkPlain($('#download-verify-sname-field').val());
     var dv_email = Drupal.checkPlain($('#edit-email').val());
 
     // Check for empty fields.
@@ -208,9 +206,12 @@
 
       if($('#download-verify-form-wrapper input#edit-email.error').length > 0) {
         Drupal.behaviors.download_verify_form_errors_clear();
-      }else{
+      }
+      /*
+      else{
         console.log("no email error displayed");
       }
+      */
 
       // @todo: check for characters not numbers in fname, sname
       //   - set on keypress attrib of textfield
