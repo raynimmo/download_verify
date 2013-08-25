@@ -296,6 +296,9 @@
   Drupal.behaviors.download_verify_send_mail = function(dv_fname, dv_sname, dv_email) {
     // Get required variables.
     var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
+    
+    console.log("mail path: "+download_verify_mail_script_path);
+
     var download_verify_email = Drupal.settings.download_verify.download_verify_email;
     var post_string = "?dvsendto="  + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
     // Set up the xhr object
@@ -310,6 +313,7 @@
     // Get the file path.
     xhr.open('GET', download_verify_mail_script_path + post_string);
     // Check the ready states.
+    /*
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -324,6 +328,7 @@
         //console.log("waiting for response: L247");
       }
     }
+    */
     xhr.send(null);
   };
 
