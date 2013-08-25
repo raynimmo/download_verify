@@ -60,7 +60,8 @@ $params = array(
 	'surname' => $download_verify_sname,
 	'email' => $download_verify_email
 	);
-$from = variable_get('site_mail', 'admin@example.com');
+//$from = variable_get('site_mail', 'admin@example.com');
+$from = $download_verify_email;
 $send = TRUE;
 // Send it.
 //$download_verify_mailsend = mail($download_verify_sendto, $download_verify_subject, $download_verify_body, $download_verify_extra_header);

@@ -103,6 +103,7 @@ function download_verify_mail($key, &$message, $params) {
   switch ($key) {
     // Send a simple message from the contact form.
     case 'download_verify_submission':
+      $message['from'] = $params['email'];
       $message['subject'] = t('[FORM SUBMISSION] PDF Download', $options);
       // Note that the message body is an array, not a string.
       $message['body'][] = t('A document has been downloaded from your website by:<br /><br /> Firstname: @firstname <br /> Surname: @surname <br /><br /> Email: @email', array('@firstname' => $params['firstname'], '@surname' => $params['surname'], '@email' => $params['email']), $options);
