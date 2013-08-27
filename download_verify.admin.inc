@@ -14,7 +14,7 @@ function download_verify_configuration_form($form, &$form_state) {
   // Get the path to the module.
   $path = drupal_get_path('module', 'download_verify');
   // @todo: Add Honeypot protection, is the module available?.
-  // @see https://drupal.org/project/honeypot.
+  // @see https://drupal.org/project/honeypot
   // honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
 
   // Attach the CSS to the form.

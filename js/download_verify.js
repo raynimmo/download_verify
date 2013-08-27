@@ -80,9 +80,20 @@
   };
 
   /**
+   * Form hidden mail token element.
+   */
+  Drupal.theme.prototype.download_verify_form_token = function(download_verify_mail_token) {
+    return '<input type="hidden" name="dvmailtoken-value" value="' + download_verify_mail_token + '" class="dvmailtoken-value" />';
+  };
+
+  Drupal.theme.prototype.download_verify_form_sessionid = function(download_verify_user_sessionid) {
+    return '<input type="hidden" name="dvsessiontoken-value" value="' + download_verify_user_sessionid + '" class="dvsessiontoken-value" />';
+  };
+
+  /**
    * Form constructor.
    */
-  Drupal.theme.prototype.download_verify_ui_form = function() {
+  Drupal.theme.prototype.download_verify_ui_form = function(download_verify_mail_token, download_verify_user_sessionid) {
     var the_form = '<div>'
              + Drupal.theme('download_verify_form_fname')
              + Drupal.theme('download_verify_form_sname')
@@ -90,6 +101,8 @@
              + Drupal.theme('download_verify_form_actions')
              + Drupal.theme('download_verify_form_feedback')
              + Drupal.theme('download_verify_form_hidden')
+             + Drupal.theme('download_verify_form_token', download_verify_mail_token)
+             + Drupal.theme('download_verify_form_sessionid', download_verify_user_sessionid)
              + '</div>';
     return the_form;
   };
@@ -111,11 +124,15 @@
       if(download_verify_cookie_display != 0) {
         var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
       }
+      var download_verify_mail_token = Drupal.settings.download_verify.download_verify_mail_token;
+      var download_verify_user_sessionid = Drupal.settings.download_verify.download_verify_user_sessionid;
+
+      //console.log('token 1: ' + download_verify_mail_token);
 
       // set up the form.
       var introtext = Drupal.theme('download_verify_intro_text_wrapper', download_verify_intro_text);
       var footertext = Drupal.theme('download_verify_footer_text_wrapper', download_verify_footer_text);
-      var theform = Drupal.theme('download_verify_ui_form');
+      var theform = Drupal.theme('download_verify_ui_form', download_verify_mail_token, download_verify_user_sessionid);
       var verifyForm = '<div id="download-verify-form-wrapper">' + introtext + theform + footertext + "</div>";
       var isOpen;
       var filepath;
@@ -206,9 +223,8 @@
 
       if($('#download-verify-form-wrapper input#edit-email.error').length > 0) {
         Drupal.behaviors.download_verify_form_errors_clear();
-      }
-      /*
-      else{
+      }      
+      /*else{
         console.log("no email error displayed");
       }
       */
@@ -232,8 +248,14 @@
           $.cookie("downloadverifyform", "1", { expires: download_verify_cookie_expiry });
         }
 
+        var download_verify_mail_token = $('input[name=dvmailtoken-value]').val();
+        //console.log('token 2: ' + download_verify_mail_token);
+
+        var download_verify_user_sessionid = $('input[name=dvsessiontoken-value]').val();
+        //console.log('session read: ' + download_verify_user_sessionid);
+
         // Email the form submission.
-        Drupal.behaviors.download_verify_send_mail(dv_fname, dv_sname, dv_email);
+        Drupal.behaviors.download_verify_send_mail(dv_fname, dv_sname, dv_email, download_verify_mail_token, download_verify_user_sessionid);
 
         // Start the file download.
         var download_verify_success = false;
@@ -293,14 +315,15 @@
   /**
    * Function for sending email in the background.
    */
-  Drupal.behaviors.download_verify_send_mail = function(dv_fname, dv_sname, dv_email) {
+  Drupal.behaviors.download_verify_send_mail = function(dv_fname, dv_sname, dv_email, download_verify_mail_token, download_verify_user_sessionid) {
     // Get required variables.
     var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
     
-    console.log("mail path: "+download_verify_mail_script_path);
+    //console.log("mail path: "+ download_verify_mail_script_path);
+    //console.log("token 3: " + download_verify_mail_token);
 
     var download_verify_email = Drupal.settings.download_verify.download_verify_email;
-    var post_string = "?dvsendto="  + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
+    var post_string = "?dvmailtoken=" + download_verify_mail_token + "&dvsessidtoken=" + download_verify_user_sessionid + "&dvsendto="  + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
     // Set up the xhr object
     var xhr;
     if (window.XMLHttpRequest) {
@@ -313,6 +336,7 @@
     // Get the file path.
     xhr.open('GET', download_verify_mail_script_path + post_string);
     // Check the ready states.
+    //console.log("xhr response: " + xhr.responseText);
     /*
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
@@ -338,6 +362,7 @@
   Drupal.behaviors.download_verify_file_handler = function(filepath) {
     // Start the file download.
     window.open(filepath);
+    //console.log("start download, file: " + filepath);
     return true;
   };
 
