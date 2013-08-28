@@ -9,12 +9,8 @@
  */
 function download_verify_init() {
   global $base_url;
-  drupal_session_start();
-  $download_verify_user_sessionid = session_id();
-  //echo "<br />session: " . session_id();
-  $seed = 'downloadverifymoduleseed';
+  $seed = 'downloadverifymoduleseed'; // @todo: move to database with admin configurable value.
   $token = drupal_get_token($seed);
-  //echo "token:" . $token;
   // Get all the required variables.
   $download_verify_settings = array(
     'download_verify_email' => variable_get('download_verify_email'),
@@ -25,7 +21,6 @@ function download_verify_init() {
     'download_verify_cookie_expiry' => variable_get('download_verify_cookie_expiry'),
     'download_verify_mail_script_path' => $base_url . "/" . drupal_get_path('module', 'download_verify') . "/download_verify_mail_send.php",
     'download_verify_mail_token' => $token,
-    'download_verify_user_sessionid' => $download_verify_user_sessionid,
   );
   drupal_add_js(array('download_verify' => $download_verify_settings), 'setting');
   drupal_add_js($base_url . '/misc/jquery.cookie.js');
@@ -38,10 +33,10 @@ function download_verify_help($path, $arg) {
   if ($path == 'admin/help#download_verify') {
     $help_text = '<h3>' . t('Download Verify module description') . '</h3>';
     $help_text .= '<p><em>' . t('Refer to the modules README.txt for further information regarding the installation and usage of the Download Verify module.') . '</em></p>';
-    $help_text .= '<p>' . t('Module for adding a form for collecting e-mail addresses from website visitors before a download can be completed.') . '</p>';
+    $help_text .= '<p>' . t('Module for adding a form for collecting E-mail addresses from website visitors before a download can be completed.') . '</p>';
     $help_text .= '<p>' . t('The module works by using JavaScript to inject the form into the websites theme files by searching for specific hooks in the CSS.') . '</p>';
     $help_text .= '<p>' . t('The CSS hook used can be set from the modules administration panel.') . '</p>';
-    $help_text .= '<p>' . t('The data submitted is e-mailed to an address specified by the site administrator within the module configuration panel.') . '</p>';
+    $help_text .= '<p>' . t('The data submitted is E-mailed to an address specified by the site administrator within the module configuration panel.') . '</p>';
     $help_text .= '<p>' . t('When a user successfully completes the form and the download begins, a cookie is also set on the users machine so that they can download subsequent files without the need of filling out the form again.') . '</p>';
     $help_text .= '<p>' . t('The cookie will be set depending upon a selection within the modules administration panel.') . '</p>';
     $help_text .= '<p>' . t('For further information or to file an issue then refer to the modules homepage at&nbsp;') . l('https://drupal.org/project/download_verify', 'http://drupal.org/project/download_verify');
@@ -91,8 +86,10 @@ function download_verify_mail($key, &$message, $params) {
     case 'download_verify_submission':
       $message['from'] = $params['email'];
       $message['subject'] = t('[FORM SUBMISSION] PDF Download', $options);
-      $message['body'][] = t('A document has been downloaded from your website by:<br /><br /> Firstname: @firstname <br /> Surname: @surname <br /><br /> Email: @email', array('@firstname' => $params['firstname'], '@surname' => $params['surname'], '@email' => $params['email']), $options);
-      //$message['body'][] = check_plain($params['message']);
+      $message['body'][] = t('A document has been downloaded from your website by:') 
+        . '<br /><br />&nbsp;' . t('First name: @firstname', array('@firstname' => $params['firstname']), $options) 
+        . '<br />&nbsp;' . t('Surname: @surname',  array('@surname' => $params['surname']), $options)
+        . '<br /><br />&nbsp;' . t('E-mail: @email', array('@email' => $params['email']), $options);      
       break;
   }
 }
