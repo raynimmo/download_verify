@@ -40,7 +40,7 @@ function download_verify_help($path, $arg) {
     $help_text .= '<p>' . t('The data submitted is E-mailed to an address specified by the site administrator within the module configuration panel.') . '</p>';
     $help_text .= '<p>' . t('When a user successfully completes the form and the download begins, a cookie is also set on the users machine so that they can download subsequent files without the need of filling out the form again.') . '</p>';
     $help_text .= '<p>' . t('The cookie will be set depending upon a selection within the modules administration panel.') . '</p>';
-    $help_text .= '<p>' . t('For further information or to file an issue then refer to the modules homepage at&nbsp;') . l('https://drupal.org/project/download_verify', 'http://drupal.org/project/download_verify');
+    $help_text .= '<p>' . t('For further information or to file an issue then refer to the modules homepage at&nbsp;') . l(t('https://drupal.org/project/download_verify'), 'http://drupal.org/project/download_verify');
 
     return $help_text;
   }
@@ -88,7 +88,7 @@ function download_verify_mail($key, &$message, $params) {
       $message['subject'] = t('[FORM SUBMISSION] PDF Download', $options);
       $message['body'][] = t('A document has been downloaded from your website by:')
         . '<br /><br />&nbsp;' . t('First name: @firstname', array('@firstname' => $params['firstname']), $options)
-        . '<br />&nbsp;' . t('Surname: @surname',  array('@surname' => $params['surname']), $options)
+        . '<br />&nbsp;' . t('Surname: @surname', array('@surname' => $params['surname']), $options)
         . '<br /><br />&nbsp;' . t('E-mail: @email', array('@email' => $params['email']), $options);
       break;
   }

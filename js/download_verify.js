@@ -24,10 +24,10 @@
    * Form textfield for first name.
    */
   Drupal.theme.prototype.download_verify_form_fname = function() {
-    var element = '<div class="form-item form-type-textfield form-item-fname">'
-      + '<label for="download-verify-fname-field">First name <span title="This field is required." class="form-required">*</span></label>'
-      + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="download-verify-fname-field" />'
-      + '</div>';
+    var element = '<div class="form-item form-type-textfield form-item-fname">';
+    element += '<label for="download-verify-fname-field">First name <span title="This field is required." class="form-required">*</span></label>';
+    element += '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="download-verify-fname-field" />';
+    element += '</div>';
     return element;
   };
 
@@ -36,9 +36,9 @@
    */
   Drupal.theme.prototype.download_verify_form_sname = function() {
     var element = '<div class="form-item form-type-textfield form-item-sname">'
-      + '<label for="download-verify-sname-field">Surname <span title="This field is required." class="form-required">*</span></label>'
-      + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="download-verify-sname-field" />'
-      + '</div>';
+    element += '<label for="download-verify-sname-field">Surname <span title="This field is required." class="form-required">*</span></label>'
+    element += '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="download-verify-sname-field" />'
+    element += '</div>';
     return element;
   };
 
@@ -47,9 +47,9 @@
    */
   Drupal.theme.prototype.download_verify_form_email = function() {
     var element = '<div class="form-item form-type-textfield form-item-email">'
-      + '<label for="edit-email">E-mail <span title="This field is required." class="form-required">*</span></label>'
-      + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email" />'
-      + '</div>';
+    element += '<label for="edit-email">E-mail <span title="This field is required." class="form-required">*</span></label>'
+    element += '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email" />'
+    element += '</div>';
     return element;
   };
 
@@ -58,9 +58,9 @@
    */
   Drupal.theme.prototype.download_verify_form_actions = function() {
     var element = '<div id="edit-actions" class="form-actions form-wrapper">'
-      + '<a class="button form-submit" id="edit-submit" href="#" onclick="Drupal.behaviors.download_verify_validate_form();">Download</a>'
-      + '<a class="button form-cancel" id="edit-cancel" href="#" onclick="Drupal.behaviors.download_verify_close();">Cancel</a>'
-      + '</div>';
+    element += '<a class="button form-submit" id="edit-submit" href="#" onclick="Drupal.behaviors.download_verify_validate_form();">Download</a>'
+    element += '<a class="button form-cancel" id="edit-cancel" href="#" onclick="Drupal.behaviors.download_verify_close();">Cancel</a>'
+    element += '</div>';
     return element;
   };
 
@@ -93,14 +93,14 @@
    */
   Drupal.theme.prototype.download_verify_ui_form = function(download_verify_mail_token) {
     var the_form = '<div>'
-      + Drupal.theme('download_verify_form_fname')
-      + Drupal.theme('download_verify_form_sname')
-      + Drupal.theme('download_verify_form_email')
-      + Drupal.theme('download_verify_form_actions')
-      + Drupal.theme('download_verify_form_feedback')
-      + Drupal.theme('download_verify_form_hidden', 0, 'filepath')
-      + Drupal.theme('download_verify_form_hidden', download_verify_mail_token, 'dvmailtoken')
-      + '</div>';
+    the_form += Drupal.theme('download_verify_form_fname')
+    the_form += Drupal.theme('download_verify_form_sname')
+    the_form += Drupal.theme('download_verify_form_email')
+    the_form += Drupal.theme('download_verify_form_actions')
+    the_form += Drupal.theme('download_verify_form_feedback')
+    the_form += Drupal.theme('download_verify_form_hidden', 0, 'filepath')
+    the_form += Drupal.theme('download_verify_form_hidden', download_verify_mail_token, 'dvmailtoken')
+    the_form += '</div>';
     return the_form;
   };
 
@@ -217,7 +217,7 @@
 
       if($('#download-verify-form-wrapper input#edit-email.error').length > 0) {
         Drupal.behaviors.download_verify_form_errors_clear();
-      }     
+      }
 
       // @todo: check for characters not numbers in fname, sname
       //   - set on keypress attrib of textfield

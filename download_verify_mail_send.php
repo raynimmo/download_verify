@@ -20,8 +20,6 @@ $seed = 'downloadverifymoduleseed';
 $token_is_valid = drupal_valid_token($download_verify_mail_token, $seed, TRUE);
 if($token_is_valid && strlen($download_verify_mail_token) == 43) {
   // echo "<br />token is valid: " . $download_verify_mail_token;
-
-  // continue the email
   // Get the POSTed variables.
   // Sanitize all user submitted variables in case of spoofed request.
   $download_verify_sendto = $_GET['dvsendto'];
