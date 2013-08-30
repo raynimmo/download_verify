@@ -6,35 +6,35 @@
  * CSS rules within the site stylesheets
  */
 #download-verify-form-wrapper {
-  display:none;
+  display: none;
 }
 p.small,
 p.msgbox {
-  font-size:0.8em;
-  line-height:1.1em;
+  font-size: 0.8em;
+  line-height: 1.1em;
 }
 p.msgbox {
-  clear:both;
+  clear: both;
 }
 span.form-required {
-  font-size:9px;
-  color:#f36060;
+  font-size: 9px;
+  color: #f36060;
 }
 span.filepath-display {
-  display:none;
+  display: none;
 }
-code{
-  display:block;
-  border:1px solid #787878!important;
+code {
+  display: block;
+  border: 1px solid #787878!important;
   background: #ededed;
   color: #313131;
-  padding:5px 10px!important;
+  padding: 5px 10px!important;
 }
 
 /* @todo: change trigger to default error style in existing stylesheet*/
 input.in-error {
   border-color: red;
-  background-color:#F46565;
+  background-color: #f46565;
 }
 
 /* @todo: need to hook into site default styles better*/

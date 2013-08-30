@@ -15,8 +15,7 @@ function download_verify_configuration_form($form, &$form_state) {
   $path = drupal_get_path('module', 'download_verify');
   // @todo: Add Honeypot protection, is the module available?.
   // @see https://drupal.org/project/honeypot
-  // honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
-
+  // @todo: honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
   // Attach the CSS to the form.
   $form['#attached'] = array(
     'css' => array(
@@ -126,7 +125,7 @@ function download_verify_configuration_form($form, &$form_state) {
     2419200,
     7776000,
     15552000,
-    31104000
+    31104000,
   ), 'format_interval');
   // Set up the select element for the cookie expiry time.
   $form['download_verify_cookie_settings']['download_verify_cookie_expiry'] = array(
@@ -136,7 +135,7 @@ function download_verify_configuration_form($form, &$form_state) {
     '#options' => $download_verify_cookie_expiry_values,
     '#description' => t('Set the expiry period for the cookie that is set on the users system.'),
     '#weight' => 11,
-    '#collapsible' => FALSE,        
+    '#collapsible' => FALSE,
   );
   // @todo: Additional textarea element for setting the body of the email sent.
   // @todo: Use placeholder tokens for details.

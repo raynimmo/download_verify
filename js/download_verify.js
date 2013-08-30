@@ -25,9 +25,9 @@
    */
   Drupal.theme.prototype.download_verify_form_fname = function() {
     var element = '<div class="form-item form-type-textfield form-item-fname">'
-                  + '<label for="download-verify-fname-field">First name <span title="This field is required." class="form-required">*</span></label>'
-                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="download-verify-fname-field" />'
-                  + '</div>';
+      + '<label for="download-verify-fname-field">First name <span title="This field is required." class="form-required">*</span></label>'
+      + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="fname" id="download-verify-fname-field" />'
+      + '</div>';
     return element;
   };
 
@@ -36,9 +36,9 @@
    */
   Drupal.theme.prototype.download_verify_form_sname = function() {
     var element = '<div class="form-item form-type-textfield form-item-sname">'
-                  + '<label for="download-verify-sname-field">Surname <span title="This field is required." class="form-required">*</span></label>'
-                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="download-verify-sname-field" />'
-                  + '</div>';
+      + '<label for="download-verify-sname-field">Surname <span title="This field is required." class="form-required">*</span></label>'
+      + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="sname" id="download-verify-sname-field" />'
+      + '</div>';
     return element;
   };
 
@@ -47,9 +47,9 @@
    */
   Drupal.theme.prototype.download_verify_form_email = function() {
     var element = '<div class="form-item form-type-textfield form-item-email">'
-                  + '<label for="edit-email">E-mail <span title="This field is required." class="form-required">*</span></label>'
-                  + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email" />'
-                  + '</div>';
+      + '<label for="edit-email">E-mail <span title="This field is required." class="form-required">*</span></label>'
+      + '<input type="text" class="form-text required" maxlength="60" size="20" value="" name="email" id="edit-email" />'
+      + '</div>';
     return element;
   };
 
@@ -58,9 +58,9 @@
    */
   Drupal.theme.prototype.download_verify_form_actions = function() {
     var element = '<div id="edit-actions" class="form-actions form-wrapper">'
-                  + '<a class="button form-submit" id="edit-submit" href="#" onclick="Drupal.behaviors.download_verify_validate_form();">Download</a>'
-                  + '<a class="button form-cancel" id="edit-cancel" href="#" onclick="Drupal.behaviors.download_verify_close();">Cancel</a>'
-                  + '</div>';
+      + '<a class="button form-submit" id="edit-submit" href="#" onclick="Drupal.behaviors.download_verify_validate_form();">Download</a>'
+      + '<a class="button form-cancel" id="edit-cancel" href="#" onclick="Drupal.behaviors.download_verify_close();">Cancel</a>'
+      + '</div>';
     return element;
   };
 
@@ -80,9 +80,11 @@
       case 'filepath':
         return '<input type="hidden" name="filepath-value" value="filepath" class="filepath-value" />';
         break;
+
       case 'dvmailtoken':
         return '<input type="hidden" name="dvmailtoken-value" value="' + element_data + '" class="dvmailtoken-value" />';
         break;
+
     }
   };
 
@@ -91,14 +93,14 @@
    */
   Drupal.theme.prototype.download_verify_ui_form = function(download_verify_mail_token) {
     var the_form = '<div>'
-             + Drupal.theme('download_verify_form_fname')
-             + Drupal.theme('download_verify_form_sname')
-             + Drupal.theme('download_verify_form_email')
-             + Drupal.theme('download_verify_form_actions')
-             + Drupal.theme('download_verify_form_feedback')
-             + Drupal.theme('download_verify_form_hidden', 0, 'filepath')
-             + Drupal.theme('download_verify_form_hidden', download_verify_mail_token, 'dvmailtoken')
-             + '</div>';
+      + Drupal.theme('download_verify_form_fname')
+      + Drupal.theme('download_verify_form_sname')
+      + Drupal.theme('download_verify_form_email')
+      + Drupal.theme('download_verify_form_actions')
+      + Drupal.theme('download_verify_form_feedback')
+      + Drupal.theme('download_verify_form_hidden', 0, 'filepath')
+      + Drupal.theme('download_verify_form_hidden', download_verify_mail_token, 'dvmailtoken')
+      + '</div>';
     return the_form;
   };
 
@@ -130,7 +132,7 @@
       var filepath;
 
       // Hijack the pdf clicks.
-      $('.' + download_verify_css_target +' a', context).click(function(event){
+      $('.' + download_verify_css_target + ' a', context).click(function(event){
         event.preventDefault();
         filepath = $(this).attr('href');
         // Check for cookie on users machine.
@@ -138,7 +140,7 @@
           var existing_cookie = jQuery.cookie("downloadverifyform");
         }
         // User already has cookie set indicating previous form completion.
-        if(existing_cookie && download_verify_cookie_display!=0) {
+        if(existing_cookie && download_verify_cookie_display != 0) {
           Drupal.behaviors.download_verify_file_handler(filepath);
         }else{
           // No cookie found on the users system.
@@ -181,7 +183,7 @@
 
   /**
    * Form close and remove.
-   */  
+   */
   Drupal.behaviors.download_verify_close = function(context) {
     var isOpen = true;
     $('#download-verify-form-wrapper').slideUp(600, function() {
@@ -202,13 +204,14 @@
     var dv_email = Drupal.checkPlain($('#edit-email').val());
 
     // Check for empty fields.
-    if((dv_fname.length==0)||(dv_sname.length==0)||(dv_email.length==0)){
+    if((dv_fname.length == 0) || (dv_sname.length == 0) || (dv_email.length == 0)) {
       // @todo: detect which one is empty.
       // Show errors.
       Drupal.behaviors.download_verify_form_errors_show();
       return false;
 
-    } else {
+    }
+    else {
       // Check for previous email format error.
       var email_error_shown = $('#download-verify-form-wrapper input#edit-email.error');
 
@@ -223,15 +226,16 @@
 
       // Check email follows a conventional format.
       var valid_email = Drupal.behaviors.download_verify_check_email_format(dv_email);
-      
-      if(valid_email) { // if the email is valid.
+      // if the email is valid.
+      if(valid_email) {
         // Get the file path.
         filepath = $('input[name=filepath-value]').val();
 
         // Set the cookie.
-        var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;     
-        var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry; 
-        if(download_verify_cookie_display == 1) { // Check if cookie setting enabled.
+        var download_verify_cookie_display = Drupal.settings.download_verify.download_verify_cookie_display;
+        var download_verify_cookie_expiry = Drupal.settings.download_verify.download_verify_cookie_expiry;
+        // Check if cookie setting enabled.
+        if(download_verify_cookie_display == 1) {
           $.cookie("downloadverifyform", "1", { expires: download_verify_cookie_expiry });
         }
         var download_verify_mail_token = $('input[name=dvmailtoken-value]').val();
@@ -303,8 +307,7 @@
     // Get required variables.
     var download_verify_mail_script_path = Drupal.settings.download_verify.download_verify_mail_script_path;
     var download_verify_email = Drupal.settings.download_verify.download_verify_email;
-    var post_string = "?dvmailtoken=" + download_verify_mail_token + "&dvsendto="  + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
-    
+    var post_string = "?dvmailtoken=" + download_verify_mail_token + "&dvsendto=" + download_verify_email + "&dvfname=" + dv_fname + "&dvsname=" + dv_sname + "&dvemail=" + dv_email;
     // Set up the xhr object
     var xhr;
     if (window.XMLHttpRequest) {
@@ -327,7 +330,7 @@
             //console.log("email sent: L241");
           }else{
             //console.log("email not sent: L243");
-          }        
+          }
         }
       }else{
         //console.log("waiting for response: L247");

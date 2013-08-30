@@ -9,7 +9,8 @@
  */
 function download_verify_init() {
   global $base_url;
-  $seed = 'downloadverifymoduleseed'; // @todo: move to database with admin configurable value.
+  // @todo: move to database with admin configurable value.
+  $seed = 'downloadverifymoduleseed';
   $token = drupal_get_token($seed);
   // Get all the required variables.
   $download_verify_settings = array(
@@ -86,10 +87,10 @@ function download_verify_mail($key, &$message, $params) {
     case 'download_verify_submission':
       $message['from'] = $params['email'];
       $message['subject'] = t('[FORM SUBMISSION] PDF Download', $options);
-      $message['body'][] = t('A document has been downloaded from your website by:') 
-        . '<br /><br />&nbsp;' . t('First name: @firstname', array('@firstname' => $params['firstname']), $options) 
+      $message['body'][] = t('A document has been downloaded from your website by:')
+        . '<br /><br />&nbsp;' . t('First name: @firstname', array('@firstname' => $params['firstname']), $options)
         . '<br />&nbsp;' . t('Surname: @surname',  array('@surname' => $params['surname']), $options)
-        . '<br /><br />&nbsp;' . t('E-mail: @email', array('@email' => $params['email']), $options);      
+        . '<br /><br />&nbsp;' . t('E-mail: @email', array('@email' => $params['email']), $options);
       break;
   }
 }
