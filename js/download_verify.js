@@ -79,12 +79,12 @@
     switch(element_type){
       case 'filepath':
         return '<input type="hidden" name="filepath-value" value="filepath" class="filepath-value" />';
+        
         break;
-
       case 'dvmailtoken':
         return '<input type="hidden" name="dvmailtoken-value" value="' + element_data + '" class="dvmailtoken-value" />';
-        break;
 
+        break;
     }
   };
 
@@ -218,12 +218,8 @@
       if($('#download-verify-form-wrapper input#edit-email.error').length > 0) {
         Drupal.behaviors.download_verify_form_errors_clear();
       }
-
       // @todo: check for characters not numbers in fname, sname
-      //   - set on keypress attrib of textfield
-
       // @todo: check string length, set minimum
-
       // Check email follows a conventional format.
       var valid_email = Drupal.behaviors.download_verify_check_email_format(dv_email);
       // if the email is valid.
@@ -251,10 +247,9 @@
         if(download_verify_success) {
           Drupal.behaviors.download_verify_close();
         }
-
       }
       else {
-        // Email format fail.
+        // E-mail format fail.
         Drupal.behaviors.download_verify_form_errors_show_email();
         return false;
       }
@@ -320,20 +315,19 @@
     // Get the file path.
     xhr.open('GET', download_verify_mail_script_path + post_string);
     // Check the ready states.
-    //console.log("xhr response: " + xhr.responseText);
     /*
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
           //console.log("xhr.responsetext: " + xhr.responseText);
           if(xhr.responseText=='Mail sent'){
-            //console.log("email sent: L241");
+            //console.log("email sent");
           }else{
-            //console.log("email not sent: L243");
+            //console.log("email not sent");
           }
         }
       }else{
-        //console.log("waiting for response: L247");
+        //console.log("waiting for response");
       }
     }
     */
@@ -346,7 +340,6 @@
   Drupal.behaviors.download_verify_file_handler = function(filepath) {
     // Start the file download.
     window.open(filepath);
-    //console.log("start download, file: " + filepath);
     return true;
   };
 

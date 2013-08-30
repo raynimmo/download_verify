@@ -7,6 +7,7 @@
  */
 #download-verify-form-wrapper {
   display: none;
+  clear: both;
 }
 p.small,
 p.msgbox {
