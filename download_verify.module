@@ -78,7 +78,6 @@ function download_verify_menu() {
  * Implements hook_mail().
  */
 function download_verify_mail($key, &$message, $params) {
-  global $user;
   $options = array(
     'langcode' => $message['language']->language,
   );
