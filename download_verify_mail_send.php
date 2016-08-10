@@ -11,10 +11,12 @@ define('DRUPAL_ROOT', getcwd());
 require_once './includes/bootstrap.inc';
 // Load up Drupal.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
 $download_verify_mail_token = $_GET['dvmailtoken'];
 $seed = 'downloadverifymoduleseed';
 // Check for valid token to avid CSRF attacks.
 $token_is_valid = drupal_valid_token($download_verify_mail_token, $seed, TRUE);
+
 if($token_is_valid && (strlen($download_verify_mail_token) == 43)) {
   // Get the POSTed variables.
   // Sanitize all user submitted variables in case of spoofed request.
@@ -34,6 +36,7 @@ if($token_is_valid && (strlen($download_verify_mail_token) == 43)) {
   );
   $from = $download_verify_email;
   $send = TRUE;
+  
   // Send it.
   $download_verify_mailsend = drupal_mail($module, $key, $download_verify_sendto, $language, $params, $from, $send);
 

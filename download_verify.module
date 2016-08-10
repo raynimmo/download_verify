@@ -12,6 +12,7 @@ function download_verify_init() {
   // @todo: move to database with admin configurable value.
   $seed = 'downloadverifymoduleseed';
   $token = drupal_get_token($seed);
+
   // Get all the required variables.
   $download_verify_settings = array(
     'download_verify_email' => variable_get('download_verify_email'),
@@ -62,7 +63,7 @@ function download_verify_permission() {
  * Implements hook_menu().
  */
 function download_verify_menu() {
-  $items['admin/config/download-verify'] = array(
+  $items['admin/config/content/download-verify'] = array(
     'title' => 'Download Verify',
     'description' => 'Configure module options',
     'page callback' => 'drupal_get_form',

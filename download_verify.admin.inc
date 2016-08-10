@@ -36,7 +36,7 @@ function download_verify_configuration_form($form, &$form_state) {
   $form['download_verify_mail_settings']['download_verify_email'] = array(
     '#type' => 'textfield',
     '#default_value' => variable_get('download_verify_email', 'yourname@example.com'),
-    '#title' => t('Address to receive form mail.'),
+    '#title' => t('Email address where enquiries are sent to.'),
     '#weight' => 2,
     '#collapsible' => FALSE,
   );
@@ -47,7 +47,7 @@ function download_verify_configuration_form($form, &$form_state) {
   // Set up the CSS reference container.
   $form['download_verify_css_target_settings'] = array(
     '#type' => 'fieldset',
-    '#title' => t('CSS target configuration'),
+    '#title' => t('CSS class name target configuration'),
     '#description' => filter_xss_admin($download_verify_css_target_settings_description),
     '#weight' => 3,
     '#collapsible' => FALSE,
@@ -101,7 +101,7 @@ function download_verify_configuration_form($form, &$form_state) {
   $form['download_verify_cookie_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Cookie options'),
-    '#description' => t('Configurations to allow the setting of the cookie and its expiry time.'),
+    '#description' => t('Configurations to allow the setting of the cookie and its expiry date/time. Ensure you update any site usage policies to reflect changes made here.'),
     '#weight' => 9,
     '#collapsible' => FALSE,
   );
